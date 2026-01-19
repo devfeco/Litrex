@@ -37,20 +37,23 @@ abstract class _AppStore with Store {
       textSecondaryColorGlobal = Colors.white70;
     } else {
       textPrimaryColorGlobal = textPrimaryColor;
-      textSecondaryColorGlobal =  textSecondaryColor;
+      textSecondaryColorGlobal = textSecondaryColor;
     }
     await setValue(isDarkModeOnPref, isDarkModeOn);
   }
 
+  // ⭐ NEW UPDATED CODE (Kevin-in göndərdiyi)
   @action
   void setNotification(bool val) {
     isNotificationOn = val;
     setValue(IS_NOTIFICATION_ON, val);
 
     if (isMobile) {
-      OneSignal.User.pushSubscription.optOut();
-
-      // OneSignal.shared.disablePush(!val);
+      if (val) {
+        OneSignal.User.pushSubscription.optIn();
+      } else {
+        OneSignal.User.pushSubscription.optOut();
+      }
     }
   }
 

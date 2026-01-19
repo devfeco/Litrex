@@ -58,4 +58,100 @@ abstract class BaseLanguage {
   // YENİ EKLENENLER
   String get lblSearchAuthor;
   String get lblNoAuthorsFound;
+
+  // ==================== AUTH STRINGS ====================
+  // Login Screen
+  String get lblWelcomeBack;
+  String get lblLoginToContinue;
+  String get lblEmail;
+  String get lblEnterEmail;
+  String get lblPassword;
+  String get lblEnterPassword;
+  String get lblRememberMe;
+  String get lblForgotPassword;
+  String get lblLogin;
+  String get lblOrContinueWith;
+  String get lblDontHaveAccount;
+  String get lblRegister;
+  String get lblLoginSuccess;
+  String get lblLoginFailed;
+  String get lblComingSoon;
+
+  // Register Screen
+  String get lblCreateAccount;
+  String get lblRegisterToGetStarted;
+  String get lblFullName;
+  String get lblEnterFullName;
+  String get lblPhone;
+  String get lblEnterPhone;
+  String get lblConfirmPassword;
+  String get lblReEnterPassword;
+  String get lblIAgreeToThe;
+  String get lblTermsOfService;
+  String get lblAnd;
+  String get lblPleaseAcceptTerms;
+  String get lblPasswordsDoNotMatch;
+  String get lblRegistrationSuccess;
+  String get lblRegistrationFailed;
+  String get lblAlreadyHaveAccount;
+
+  // Forgot Password Screen
+  String get lblVerifyCode;
+  String get lblNewPassword;
+  String get lblSuccess;
+  String get lblEnterEmailToReset;
+  String get lblSendCode;
+  String get lblResetCodeSent;
+  String get lblSomethingWentWrong;
+  String get lblPleaseEnterEmail;
+  String get lblEnterCodeSentToEmail;
+  String get lblEnterVerificationCode;
+  String get lblResendCode;
+  String get lblVerify;
+  String get lblEnterNewPassword;
+  String get lblConfirmNewPassword;
+  String get lblPleaseEnterCode;
+  String get lblPleaseEnterPassword;
+  String get lblPasswordTooShort;
+  String get lblResetPassword;
+  String get lblPasswordResetSuccess;
+  String get lblBackToLogin;
+
+  // Profile Screen
+  String get lblProfile;
+  String get lblEditProfile;
+  String get lblUpdateYourInfo;
+  String get lblChangePassword;
+  String get lblUpdateYourPassword;
+  String get lblYourBookmarks;
+  String get lblNotifications;
+  String get lblManageNotifications;
+  String get lblHelpSupport;
+  String get lblGetHelp;
+  String get lblLogout;
+  String get lblLogoutConfirmation;
+  String get lblLogoutSuccess;
+  String get lblDeleteAccount;
+  String get lblDeleteAccountWarning;
+  String get lblEnterPasswordToConfirm;
+  String get lblAccountDeleted;
+  String get lblDelete;
+  String get lblNotLoggedIn;
+  String get lblLoginToAccessProfile;
+  String get lblBio;
+  String get lblBooksRead;
+  String get lblBookmarks;
+  String get lblFavorites;
+  String get lblCurrentPassword;
+  String get lblPasswordChangedSuccess;
+  String get lblUpdate;
+
+  // Edit Profile Screen
+  String get lblEnterBio;
+  String get lblSaveChanges;
+  String get lblProfileUpdated;
+  String get lblAvatarUpdated;
+  String get lblChoosePhoto;
+  String get lblCamera;
+  String get lblGallery;
 }

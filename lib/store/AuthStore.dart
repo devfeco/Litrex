@@ -1,0 +1,85 @@
+import 'package:mobx/mobx.dart';
+import '../model/UserModel.dart';
+import '../utils/Extensions/shared_pref.dart';
+import '../utils/constant.dart';
+
+part 'AuthStore.g.dart';
+
+class AuthStore = _AuthStore with _$AuthStore;
+
+abstract class _AuthStore with Store {
+  @observable
+  bool isLoggedIn = false;
+
+  @observable
+  bool isLoading = false;
+
+  @observable
+  UserModel? currentUser;
+
+  @observable
+  String? authToken;
+
+  @action
+  Future<void> setLoggedIn(bool val) async {
+    isLoggedIn = val;
+    await setValue(IS_LOGGED_IN, val);
+  }
+
+  @action
+  void setLoading(bool val) => isLoading = val;
+
+  @action
+  Future<void> setUser(UserModel? user) async {
+    currentUser = user;
+    if (user != null) {
+      await setValue(USER_ID, user.id ?? 0);
+      await setValue(USER_NAME, user.name ?? '');
+      await setValue(USER_EMAIL, user.email ?? '');
+      await setValue(USER_PHONE, user.phone ?? '');
+      await setValue(USER_AVATAR, user.avatar ?? '');
+      await setValue(USER_BIO, user.bio ?? '');
+    }
+  }
+
+  @action
+  Future<void> setAuthToken(String? token) async {
+    authToken = token;
+    if (token != null) {
+      await setValue(AUTH_TOKEN, token);
+    }
+  }
+
+  @action
+  Future<void> loadUserFromPrefs() async {
+    isLoggedIn = getBoolAsync(IS_LOGGED_IN);
+    authToken = getStringAsync(AUTH_TOKEN);
+    
+    if (isLoggedIn) {
+      currentUser = UserModel(
+        id: getIntAsync(USER_ID),
+        name: getStringAsync(USER_NAME),
+        email: getStringAsync(USER_EMAIL),
+        phone: getStringAsync(USER_PHONE),
+        avatar: getStringAsync(USER_AVATAR),
+        bio: getStringAsync(USER_BIO),
+      );
+    }
+  }
+
+  @action
+  Future<void> logout() async {
+    isLoggedIn = false;
+    currentUser = null;
+    authToken = null;
+    
+    await setValue(IS_LOGGED_IN, false);
+    await setValue(AUTH_TOKEN, '');
+    await setValue(USER_ID, 0);
+    await setValue(USER_NAME, '');
+    await setValue(USER_EMAIL, '');
+    await setValue(USER_PHONE, '');
+    await setValue(USER_AVATAR, '');
+    await setValue(USER_BIO, '');
+  }
+}

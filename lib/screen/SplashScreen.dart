@@ -3,6 +3,7 @@ import '../../screen/ChooseTopicScreen.dart';
 import '../utils/Extensions/context_extensions.dart';
 import '../main.dart';
 import '../screen/GetStaredScreen.dart';
+import '../screen/auth/LoginScreen.dart';
 import '../utils/Extensions/Constants.dart';
 import '../utils/Extensions/Widget_extensions.dart';
 import '../utils/Extensions/decorations.dart';
@@ -31,14 +32,27 @@ class SplashScreenState extends State<SplashScreen> {
 
   init() async {
     await 2.seconds.delay;
+    
+    // Auth durumunu yükle
+    await authStore.loadUserFromPrefs();
+    
     bool seen = (getBoolAsync('isFirstTime'));
+    
     if (seen) {
-      if (getStringListAsync(chooseTopicList) != null) {
-        DashboardScreen().launch(context, isNewTask: true);
+      // Kullanıcı daha önce uygulamayı görmüş
+      if (authStore.isLoggedIn) {
+        // Giriş yapılmış, Dashboard'a git
+        if (getStringListAsync(chooseTopicList) != null) {
+          DashboardScreen().launch(context, isNewTask: true);
+        } else {
+          ChooseTopicScreen(isVisibleBack: false).launch(context, isNewTask: true);
+        }
       } else {
-        ChooseTopicScreen(isVisibleBack: false).launch(context,isNewTask: true);
+        // Giriş yapılmamış, Login'e git
+        LoginScreen().launch(context, isNewTask: true);
       }
     } else {
+      // İlk kez açılıyor, onboarding göster
       await setValue('isFirstTime', true);
       GetStaredScreen().launch(context, isNewTask: true);
     }

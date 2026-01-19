@@ -6,6 +6,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import '../store/AppStore.dart';
+import '../store/AuthStore.dart';
 import '../store/WishListStore/WishListStore.dart';
 import '../utils/Extensions/Commons.dart';
 import '../utils/Extensions/Constants.dart';
@@ -29,6 +30,7 @@ import 'screen/NoInternetScreen.dart';
 import 'screen/SplashScreen.dart';
 
 AppStore appStore = AppStore();
+AuthStore authStore = AuthStore();
 WishListStore wishListStore = WishListStore();
 late SharedPreferences sharedPreferences;
 bool isCurrentlyOnNoInternet = false;

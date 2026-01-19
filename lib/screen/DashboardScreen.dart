@@ -12,7 +12,7 @@ import '../utils/Extensions/decorations.dart';
 import '../utils/Extensions/text_styles.dart';
 import 'CategoryScreen.dart';
 import 'HomeScreen.dart';
-import 'SettingScreen.dart';
+import 'auth/ProfileScreen.dart';
 import 'WebViewScreen.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -29,7 +29,7 @@ class DashboardScreenState extends State<DashboardScreen> {
     HomeScreen(),
     CategoryScreen(),
     BookmarkScreen(),
-    SettingScreen(onTap: () {}),
+    ProfileScreen(),
   ];
 
   @override
@@ -88,7 +88,7 @@ class DashboardScreenState extends State<DashboardScreen> {
           BottomNavigationBarItem(icon: Icon(Ionicons.md_book_outline, size: 20), activeIcon: Column(children: [Icon(Ionicons.book, size: 22), mLine()]), label: ""),
           BottomNavigationBarItem(icon: Icon(Ionicons.md_grid_outline, size: 20), activeIcon: Column(children: [Icon(Ionicons.md_grid, size: 22), mLine()]), label: ""),
           BottomNavigationBarItem(icon: Icon(Ionicons.ios_bookmarks_outline, size: 20), activeIcon: Column(children: [Icon(Ionicons.bookmarks, size: 22), mLine()]), label: ""),
-          BottomNavigationBarItem(icon: Icon(Ionicons.settings_outline, size: 20), activeIcon: Column(children: [Icon(Ionicons.settings, size: 22), mLine()]), label: ""),
+          BottomNavigationBarItem(icon: Icon(Ionicons.person_outline, size: 20), activeIcon: Column(children: [Icon(Ionicons.person, size: 22), mLine()]), label: ""),
         ],
       ),
     );

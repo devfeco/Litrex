@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../screen/ChooseTopicScreen.dart';
+import '../screen/auth/LoginScreen.dart';
 import '../utils/Extensions/Widget_extensions.dart';
 import '../utils/Extensions/context_extensions.dart';
 import '../utils/Extensions/int_extensions.dart';
@@ -84,6 +85,12 @@ class GetStaredScreenState extends State<GetStaredScreen> {
     super.dispose();
   }
 
+  void _onGetStarted() {
+    appStore.setNotification(true);
+    // Login ekranına git
+    LoginScreen().launch(context, isNewTask: true);
+  }
+
   @override
   Widget build(BuildContext context) {
     init();
@@ -109,10 +116,7 @@ class GetStaredScreenState extends State<GetStaredScreen> {
                       color: primaryColor,
                       borderRadius: radius(8),
                     ),
-                  ).onTap(() {
-                    appStore.setNotification(true);
-                    ChooseTopicScreen(isVisibleBack: false).launch(context,isNewTask: true);
-                  }),
+                  ).onTap(_onGetStarted),
                   secondChild: SizedBox(),
                   duration: Duration(milliseconds: 300),
                   firstCurve: Curves.easeIn,
@@ -121,10 +125,7 @@ class GetStaredScreenState extends State<GetStaredScreen> {
               bottom: 20,
               right: 20),
           Positioned(
-              child: AnimatedContainer(duration: Duration(seconds: 1), child: Text(language.lblSkip, style: boldTextStyle(color: primaryColor)), padding: EdgeInsets.fromLTRB(16, 8, 16, 8)).onTap(() {
-                appStore.setNotification(true);
-                ChooseTopicScreen(isVisibleBack: false).launch(context,isNewTask: true);
-              }),
+              child: AnimatedContainer(duration: Duration(seconds: 1), child: Text(language.lblSkip, style: boldTextStyle(color: primaryColor)), padding: EdgeInsets.fromLTRB(16, 8, 16, 8)).onTap(_onGetStarted),
               right: 8,
               top: context.statusBarHeight + 8)
         ],

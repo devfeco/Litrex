@@ -59,6 +59,16 @@ const COPYRIGHT = 'copyright';
 const WISHLIST_ITEM_LIST = 'WISHLIST_ITEM_LIST';
 const IS_NOTIFICATION_ON = "IS_NOTIFICATION_ON";
 
+// Auth Constants
+const IS_LOGGED_IN = 'IS_LOGGED_IN';
+const AUTH_TOKEN = 'AUTH_TOKEN';
+const USER_ID = 'USER_ID';
+const USER_NAME = 'USER_NAME';
+const USER_EMAIL = 'USER_EMAIL';
+const USER_PHONE = 'USER_PHONE';
+const USER_AVATAR = 'USER_AVATAR';
+const USER_BIO = 'USER_BIO';
+
 const msg = 'message';
 
 const ThemeModeLight = 0;
