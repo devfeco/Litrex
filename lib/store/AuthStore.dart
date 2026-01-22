@@ -19,6 +19,10 @@ abstract class _AuthStore with Store {
 
   @observable
   String? authToken;
+  
+  @computed
+  bool get isPremiumUser => currentUser?.isPremium == 1;
+
 
   @action
   Future<void> setLoggedIn(bool val) async {
@@ -39,6 +43,8 @@ abstract class _AuthStore with Store {
       await setValue(USER_PHONE, user.phone ?? '');
       await setValue(USER_AVATAR, user.avatar ?? '');
       await setValue(USER_BIO, user.bio ?? '');
+      await setValue('IS_PREMIUM', user.isPremium ?? 0);
+
     }
   }
 
@@ -63,7 +69,9 @@ abstract class _AuthStore with Store {
         phone: getStringAsync(USER_PHONE),
         avatar: getStringAsync(USER_AVATAR),
         bio: getStringAsync(USER_BIO),
+        isPremium: getIntAsync('IS_PREMIUM'),
       );
+
     }
   }
 
@@ -81,5 +89,7 @@ abstract class _AuthStore with Store {
     await setValue(USER_PHONE, '');
     await setValue(USER_AVATAR, '');
     await setValue(USER_BIO, '');
+    await setValue('IS_PREMIUM', 0);
+
   }
 }

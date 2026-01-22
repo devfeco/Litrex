@@ -16,7 +16,11 @@ import '../utils/Extensions/Constants.dart';
 import '../utils/colors.dart';
 import '../utils/constant.dart';
 import '../utils/images.dart';
+import 'package:flutter/widgets.dart';
+import '../utils/OfflineReadingService.dart';
+import '../screen/PremiumScreen.dart';
 import 'WebViewScreen.dart';
+
 
 class BookDetailScreen extends StatefulWidget {
   static String tag = '/BookDetailScreen';
@@ -30,6 +34,9 @@ class BookDetailScreen extends StatefulWidget {
 
 class BookDetailScreenState extends State<BookDetailScreen> {
   String? formatted;
+  bool isDownloaded = false;
+  bool isDownloading = false;
+  double downloadProgress = 0.0;
 
   @override
   void initState() {
@@ -43,7 +50,13 @@ class BookDetailScreenState extends State<BookDetailScreen> {
       iOSAdvertiserTrackingEnabled: true,
     );
     if (mWebInterstitialAds == '1') loadInterstitialAds();
+
+    if (widget.data.id != null) {
+      isDownloaded = await OfflineReadingService().isBookDownloaded(widget.data.id!);
+      setState(() {});
+    }
   }
+
 
   @override
   void setState(fn) {
@@ -132,14 +145,92 @@ class BookDetailScreenState extends State<BookDetailScreen> {
               icon: Icon(wishListStore.isItemInWishlist(widget.data.id!.toInt()) == false ? MaterialIcons.bookmark_outline : MaterialIcons.bookmark, size: 24, color: Colors.white),
             ),
             Container(width: 2, height: 50, color: Colors.white),
+            // Download Button
+            if (widget.data.type == "file" || widget.data.type == "pdf") // Only show for files
+            IconButton(
+              onPressed: () async {
+                 if (!authStore.isPremiumUser) {
+                   PremiumScreen().launch(context);
+                   return;
+                 }
+                 
+                 if (isDownloaded) {
+                   // Optional: Confirm delete
+                   // Optional: Confirm delete
+                   showDialog(
+                     context: context,
+                     builder: (c) => AlertDialog(
+                       title: Text("Remove Download?", style: boldTextStyle()),
+                       content: Text("Are you sure you want to remove this book from offline storage?", style: secondaryTextStyle()),
+                       actions: [
+                         TextButton(
+                           child: Text(language.lblCancel, style: primaryTextStyle()),
+                           onPressed: () => Navigator.pop(c),
+                         ),
+                         TextButton(
+                           child: Text(language.lblYes, style: primaryTextStyle(color: primaryColor)),
+                           onPressed: () async {
+                             Navigator.pop(c);
+                             await OfflineReadingService().removeBook(widget.data.id!);
+                             isDownloaded = false;
+                             setState(() {});
+                           },
+                         ),
+                       ],
+                     ),
+                   );
+
+                 } else if (!isDownloading) {
+                   setState(() {
+                     isDownloading = true;
+                   });
+                   
+                   try {
+                      await OfflineReadingService().downloadBook(
+                        widget.data.id!, 
+                        widget.data.file ?? widget.data.url ?? "",
+                        onReceiveProgress: (rec, total) {
+                          setState(() {
+                            downloadProgress = rec / total;
+                          });
+                        }
+                      );
+                      isDownloaded = true;
+                      toast("Download Complete");
+                   } catch (e) {
+                      toast("Download Failed: $e");
+                   } finally {
+                      setState(() {
+                         isDownloading = false;
+                         downloadProgress = 0.0;
+                      });
+                   }
+                 }
+              },
+              icon: isDownloading 
+                  ? CircularProgressIndicator(value: downloadProgress, color: Colors.white, strokeWidth: 2)
+                  : Icon(isDownloaded ? Icons.offline_pin : Icons.download, color: Colors.white),
+            ),
+             if (widget.data.type == "file" || widget.data.type == "pdf") 
+               Container(width: 2, height: 50, color: Colors.white),
+
+            Container(width: 2, height: 50, color: Colors.white),
             GestureDetector(
-              onTap: () {
+              onTap: () async {
                 if (widget.data.type == "file") {
                   if (widget.data.type.isEmptyOrNull) {
                     toast(language.lblTryAgain);
                   } else if (!widget.data.file!.contains(".pdf")) {
                     WebViewScreen(title: widget.data.name.validate(),mInitialUrl: widget.data.file!).launch(context);
                   } else {
+                    // Check Offline First
+                    if (isDownloaded) {
+                      final bytes = await OfflineReadingService().getDecryptedBook(widget.data.id!);
+                      if (bytes != null) {
+                         PDFViewerComponent(title: widget.data.name.validate(), url: "", fileBytes: bytes).launch(context);
+                         return;
+                      }
+                    }
                     PDFViewerComponent(title: widget.data.name.validate(),url: widget.data.file!).launch(context);
                   }
                 } else {
@@ -148,10 +239,19 @@ class BookDetailScreenState extends State<BookDetailScreen> {
                   } else if (!widget.data.url!.contains(".pdf")) {
                     WebViewScreen(title: widget.data.name.validate(),mInitialUrl: widget.data.url!).launch(context);
                   } else {
+                     // Check Offline First
+                    if (isDownloaded) {
+                      final bytes = await OfflineReadingService().getDecryptedBook(widget.data.id!);
+                      if (bytes != null) {
+                         PDFViewerComponent(title: widget.data.name.validate(), url: "", fileBytes: bytes).launch(context);
+                         return;
+                      }
+                    }
                     PDFViewerComponent(title: widget.data.name.validate(),url: widget.data.url!).launch(context);
                   }
                 }
               },
+
               child: Text(language.lblReadBook, style: boldTextStyle(size: 18, color: Colors.white), textAlign: TextAlign.center),
             ).expand()
           ],

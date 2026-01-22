@@ -7,6 +7,8 @@ class UserModel {
   String? bio;
   String? createdAt;
   String? updatedAt;
+  int? isPremium;
+
 
   UserModel({
     this.id,
@@ -17,7 +19,10 @@ class UserModel {
     this.bio,
     this.createdAt,
     this.updatedAt,
+    this.isPremium,
   });
+
+
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
@@ -29,8 +34,11 @@ class UserModel {
       bio: json['bio'],
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
+      isPremium: json['is_premium'] is String ? int.tryParse(json['is_premium']) : json['is_premium'],
     );
+
   }
+
 
   Map<String, dynamic> toJson() {
     return {
@@ -42,7 +50,9 @@ class UserModel {
       'bio': bio,
       'created_at': createdAt,
       'updated_at': updatedAt,
+      'is_premium': isPremium,
     };
+
   }
 }
 
