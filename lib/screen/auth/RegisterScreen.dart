@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import '../../main.dart';
@@ -80,6 +82,18 @@ class RegisterScreenState extends State<RegisterScreen>
     super.dispose();
   }
 
+  Future<String?> _getDeviceId() async {
+    var deviceInfo = DeviceInfoPlugin();
+    if (Platform.isIOS) {
+      var iosDeviceInfo = await deviceInfo.iosInfo;
+      return iosDeviceInfo.identifierForVendor;
+    } else if (Platform.isAndroid) {
+      var androidDeviceInfo = await deviceInfo.androidInfo;
+      return androidDeviceInfo.id;
+    }
+    return null;
+  }
+
   void _nextStep() {
     if (_currentStep == 0) {
       // İlk adım validasyonu
@@ -132,11 +146,14 @@ class RegisterScreenState extends State<RegisterScreen>
     setState(() => isLoading = true);
 
     try {
+      String? deviceId = await _getDeviceId();
+
       final response = await registerUser(
         name: nameController.text.trim(),
         email: emailController.text.trim(),
         password: passwordController.text,
         phone: phoneController.text.trim(),
+        deviceId: deviceId,
       );
 
       if (response.success == true && response.user != null) {

@@ -69,6 +69,7 @@ dependencies:
   #Localization
   flutter_localizations:
     sdk: flutter
+  device_info_plus: ^12.3.0
 
 
 

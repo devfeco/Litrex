@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -68,14 +70,29 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
     super.dispose();
   }
 
+  Future<String?> _getDeviceId() async {
+    var deviceInfo = DeviceInfoPlugin();
+    if (Platform.isIOS) {
+      var iosDeviceInfo = await deviceInfo.iosInfo;
+      return iosDeviceInfo.identifierForVendor; // unique ID on iOS
+    } else if (Platform.isAndroid) {
+      var androidDeviceInfo = await deviceInfo.androidInfo;
+      return androidDeviceInfo.id; // unique ID on Android
+    }
+    return null;
+  }
+
   Future<void> handleLogin() async {
     if (_formKey.currentState!.validate()) {
       setState(() => isLoading = true);
       
       try {
+        String? deviceId = await _getDeviceId();
+        
         final response = await loginUser(
           email: emailController.text.trim(),
           password: passwordController.text,
+          deviceId: deviceId,
         );
         
         if (response.success == true && response.user != null) {

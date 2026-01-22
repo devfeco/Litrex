@@ -1,81 +1,100 @@
-# Premium Feature & In-App Purchase Implementation Guide
+# Premium Özelliği & Uygulama İçi Satın Alma Entegrasyon Kılavuzu
 
-This guide outlines the steps to implement and configure the Premium feature using Google In-App Billing in your Flutter application and the necessary backend changes.
+Bu kılavuz, uygulamanızdaki Premium (Abonelik) özelliğini Google Play Console üzerinden canlıya almak ve başarıyla çalıştırmak için izlemeniz gereken adımları içerir. Demo modları kaldırıldı, artık üretim (production) için hazırsınız.
 
-## 1. Backend Implementation (PHP)
+## 1. Backend İşlemleri (PHP API & Veritabanı)
 
-You need to update your MySQL database and PHP API to handle user subscription status.
+Uygulamanın kullanıcılarınızın premium olup olmadığını anlaması için veritabanında ve API tarafında bu değişiklikleri yapmalısınız.
 
-### Database Changes
-Run the following SQL query to update your `users` table (or whatever table stores user data):
+### Adım 1.1: Veritabanı Güncellemesi
+Mevcut `users` veya kullanıcı tablonuza aşağıdaki kolonları ekleyin.
 
 ```sql
 ALTER TABLE `users`
 ADD COLUMN `is_premium` TINYINT(1) DEFAULT 0,
 ADD COLUMN `premium_expiry_date` DATETIME NULL,
-ADD COLUMN `subscription_id` VARCHAR(255) NULL; -- To store Google Purchase Token or Order ID
+ADD COLUMN `subscription_id` VARCHAR(255) NULL;
 ```
 
-### API Endpoints
+### Adım 1.2: Doğrulama Endpoints (PHP)
+Uygulama satın alma başarılı olduğunda bu endpoint'e istek atacak. `premium_status.php` gibi bir dosya oluşturun:
 
-You need to create or update an endpoint to verify purchases and update the user's status.
+**Önemli:** Güvenlik için Google Play Developer API kullanarak sunucu taraflı doğrulama (Server-side Verification) yapılması şiddetle önerilir. Ancak başlangıç için basit mantık şöyledir:
 
-**Endpoint:** `OST_premium_status.php` (Example)
-**Method:** `POST`
+`POST /api/premium_status.php`
+```php
+<?php
+include 'db_connect.php'; // Kendi DB bağlantınızı dahil edin
 
-**Request Body:**
-```json
-{
-  "user_id": 123,
-  "purchase_token": "token_from_google",
-  "product_id": "premium_1_month",
-  "package_name": "com.litrex.ebook"
+$user_id = $_POST['user_id'];
+$product_id = $_POST['product_id']; // premium_monthly veya premium_quarterly
+$purchase_token = $_POST['purchase_token'];
+
+// Süre hesapla
+$duration = "+1 month";
+if (strpos($product_id, 'quarterly') !== false) {
+    $duration = "+3 month";
 }
+
+$expiry_date = date('Y-m-d H:i:s', strtotime($duration));
+
+// Kullanıcıyı güncelle
+$sql = "UPDATE users SET is_premium=1, premium_expiry_date='$expiry_date', subscription_id='$purchase_token' WHERE id='$user_id'";
+
+if ($conn->query($sql) === TRUE) {
+    echo json_encode(["status" => "success", "message" => "Premium aktif edildi", "expiry_date" => $expiry_date]);
+} else {
+    echo json_encode(["status" => "error", "message" => "Veritabanı hatası"]);
+}
+?>
 ```
 
-**Logic:**
-1. Verify the `purchase_token` with Google Play Developer API (Optional but recommended for security).
-2. If valid, calculate the expiry date based on `product_id` (e.g., +1 month or +3 months).
-3. Update the `users` table:
-   - Set `is_premium = 1`
-   - Set `premium_expiry_date = [calculated_date]`
-   - Set `subscription_id = [purchase_token]`
-4. Return success response with new user profile data.
+## 2. Google Play Console Kurulumu (Kritik)
 
-## 2. Google Play Console Setup
+Uygulama içi satın alımların çalışması için bu adımları **kesinlikle** yapmalısınız.
 
-To test In-App Purchases, you must set them up in the Google Play Console.
+### Adım 2.1: Merchant Hesabı
+*   Google Play Console menüsünde **Setup > Payments profile** (Ödeme profili) kısmına gidin ve bir ödeme hesabı oluşturun. Bu olmadan ücretli ürün satamazsınız.
 
-1.  **Create a Merchant Account:** link it to your developer account.
-2.  **Create Application:** If not already created.
-3.  **Monetize > Products > Subscriptions:**
-    *   Create a subscription.
-    *   **Base Plan 1:** Monthly (e.g., ID: `premium_monthly`, Price: $4.99)
-    *   **Base Plan 2:** 3 Months (e.g., ID: `premium_quarterly`, Price: $12.99)
-4.  **License Testing:**
-    *   Go to **Setup > License Testing**.
-    *   Add your tester email addresses (the accounts logged in on your test devices).
-    *   This allows you to "buy" items without being charged real money (test cards).
+### Adım 2.2: Abonelik Oluşturma
+*   Console'da uygulamanızı seçin.
+*   Soldaki menüden **Monetize > Products > Subscriptions** (Abonelikler) kısmına gidin.
+*   **Create Subscription** deyin.
 
-## 3. Flutter Integration Details
+**Ürün 1 (Aylık):**
+*   **Product ID:** `premium_monthly` (Kod içinde bu ID kullanıldı, aynısı olmalı!)
+*   **Name:** Aylık Premium
+*   **Base Plan:** Auto-renewing, Monthly, Fiyat belirleyin (Örn: 49.99 TRY).
 
-The `PremiumScreen.dart` has been created with the following logic:
+**Ürün 2 (3 Aylık):**
+*   **Product ID:** `premium_quarterly` (Kod içinde bu ID kullanıldı!)
+*   **Name:** 3 Aylık Premium
+*   **Base Plan:** Auto-renewing, 3 Months, Fiyat belirleyin (Örn: 129.99 TRY).
 
-*   **UI:** Displays two packages (1 Month & 3 Months) with benefits.
-*   **Logic:**
-    *   Uses `in_app_purchase` package.
-    *   Listens to purchase updates (`_listenToPurchaseUpdated`).
-    *   When a user clicks "Buy":
-        *   Initiates purchase flow with Google.
-        *   On success, calls your backend API (`enablePremiumOnBackend`) to update the database.
+### Adım 2.3: Lisans Testçileri (License Testing)
+Gerçek para harcamadan test etmek için:
+*   Console Ana Menü -> **Setup > License Testing**
+*   Test yapacağınız Gmail adreslerini buraya ekleyin.
+*   **License response** kısmını `RESPOND_NORMALLY` seçin.
 
-### Important Note on Testing
-*   In-App Purchases **DO NOT WORK** on the iOS Simulator or Android Emulator unless you have Google Play Store installed and logged in with a tester account.
-*   You must use a **Real Device** or a specific emulator image with Google Play.
-*   The app must be signed and uploaded to Internal Test Track (at least once draft) for IAP items to be fetched.
+## 3. Uygulama Testi
 
-## 4. Next Steps for You
+### Adım 3.1: İmzalı Sürüm (Signed APK/AAB)
+*   **Debug modunda (flutter run) In-App Purchase çalışmayabilir.**
+*   Uygulamanızı imzalayarak bir **App Bundle (.aab)** oluşturun: `flutter build appbundle`
+*   Bu sürümü Google Play Console'da **Internal Testing** (Dahili Test) kanalına yükleyin.
 
-1.  **Backend:** Implement the database columns and the API endpoint to update the user status.
-2.  **Google Console:** Create the subscription products matching the IDs used in `PremiumScreen.dart` (`premium_monthly`, `premium_quarterly`).
-3.  **Testing:** Build a signed APK/AAB, verify on a real device.
+### Adım 3.2: Test Cihazı
+*   Internal Testing'e eklediğiniz mail adresiyle giriş yapılmış gerçek bir Android cihaz kullanın.
+*   Emülatör kullanacaksanız, **Google Play Store** içeren bir emülatör imajı olduğundan emin olun ve lisans testçisi hesabınızla Play Store'a giriş yapın.
+
+## 4. Sorun Giderme
+
+*   **"Ürünler bulunamadı" hatası alıyorum:**
+    *   Uygulama yayında mı (Internal/Alpha/Beta)? Taslak modu bazen yetmez.
+    *   Product ID'ler (`premium_monthly`) Console ile birebir aynı mı?
+    *   Test cihazındaki Google hesabı, Lisans Testçileri listesinde var mı?
+    
+*   **Satın alma gerçekleşiyor ama backend güncellenmiyor:**
+    *   `_verifyPurchase` metodundaki API çağrısını kontrol edin.
+    *   Sunucunuzun loglarını inceleyin.

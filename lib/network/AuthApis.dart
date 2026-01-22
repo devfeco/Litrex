@@ -11,6 +11,7 @@ import '../utils/Extensions/string_extensions.dart';
 Future<AuthResponse> loginUser({
   required String email,
   required String password,
+  String? deviceId,
 }) async {
   final response = await buildHttpResponse(
     'auth/login.php',
@@ -18,6 +19,7 @@ Future<AuthResponse> loginUser({
     request: {
       'email': email,
       'password': password,
+      if (deviceId != null) 'device_id': deviceId,
     },
   );
   return AuthResponse.fromJson(await handleResponse(response));
@@ -29,6 +31,7 @@ Future<AuthResponse> registerUser({
   required String email,
   required String password,
   String? phone,
+  String? deviceId,
 }) async {
   final response = await buildHttpResponse(
     'auth/register.php',
@@ -38,6 +41,7 @@ Future<AuthResponse> registerUser({
       'email': email,
       'password': password,
       if (phone != null && phone.isNotEmpty) 'phone': phone,
+      if (deviceId != null) 'device_id': deviceId,
     },
   );
   return AuthResponse.fromJson(await handleResponse(response));

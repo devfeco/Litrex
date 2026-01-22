@@ -132,19 +132,29 @@ class _PremiumScreenState extends State<PremiumScreen> with SingleTickerProvider
    void _handleMainButtonTap() {
     if (_isLoading) return;
     if (!_isAvailable) {
-      toast("Mağaza bağlantısı yok (Emülatörde Play Store gerekli)");
+      toast("Mağaza bağlantısı yok. Lütfen Google Play Store'a giriş yapın.");
       return;
     }
     
-    // For demo purposes if no products are fetched (emulator without google play)
     if (_products.isEmpty) {
-        // Just show a toast for the selected mock
-        toast("Demo Modu: Satın alma başlatılıyor...");
+        // Retry loading or show message
+        _initStoreInfo();
+        toast("Ürünler yükleniyor, lütfen tekrar deneyin.");
         return;
     }
 
-    final prod = _products.firstWhere((p) => p.id == _selectedProductId, orElse: () => _products[0]);
-    _buyProduct(prod);
+    // Default to first available if selection failed
+    if (_selectedProductId == null && _products.isNotEmpty) {
+        _selectedProductId = _products[0].id;
+    }
+    
+    if (_selectedProductId != null) {
+        final prod = _products.firstWhere(
+           (p) => p.id == _selectedProductId, 
+           orElse: () => _products[0]
+        );
+        _buyProduct(prod);
+    }
   }
 
   @override
