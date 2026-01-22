@@ -30,6 +30,7 @@ import 'AuthorDetailScreen.dart';
 import 'AuthorListScreen.dart';
 import 'BookDetailScreen.dart';
 import 'SearchScreen.dart';
+import 'PremiumScreen.dart';
 
 class HomeScreen extends StatefulWidget {
   static String tag = '/HomeScreen';
@@ -184,6 +185,27 @@ class HomeScreenState extends State<HomeScreen> {
         title: Text(AppName,
             style: boldTextStyle(size: 20, color: Colors.white)),
         actions: [
+          Container(
+            margin: EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(colors: [Colors.amber, Colors.orange]),
+              borderRadius: radius(20),
+            ),
+            child: InkWell(
+              onTap: () { PremiumScreen().launch(context); },
+              borderRadius: radius(20),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                child: Row(
+                  children: [
+                     Icon(Icons.diamond, color: Colors.white, size: 16),
+                     4.width,
+                     Text("Premium", style: boldTextStyle(color: Colors.white, size: 12)),
+                  ],
+                ),
+              ),
+            ),
+          ),
           IconButton(
             icon: Icon(Ionicons.search_sharp, color: Colors.white),
             onPressed: () {

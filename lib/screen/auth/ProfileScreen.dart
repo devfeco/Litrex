@@ -17,6 +17,7 @@ import '../SettingScreen.dart';
 import '../BookmarkScreen.dart';
 import 'EditProfileScreen.dart';
 import 'LoginScreen.dart';
+import '../PremiumScreen.dart';
 
 class ProfileScreen extends StatefulWidget {
   static String tag = '/ProfileScreen';
@@ -269,6 +270,40 @@ class ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                     
+                    20.height,
+
+                     // Premium Banner
+                    GestureDetector(
+                      onTap: () => PremiumScreen().launch(context),
+                      child: Container(
+                        margin: EdgeInsets.symmetric(horizontal: 24),
+                        padding: EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(colors: [Colors.amber.shade700, Colors.amber.shade400]),
+                          borderRadius: radius(16),
+                          boxShadow: [BoxShadow(color: Colors.amber.withOpacity(0.4), blurRadius: 10, offset: Offset(0, 4))],
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(color: Colors.white24, shape: BoxShape.circle),
+                              child: Icon(Icons.diamond, color: Colors.white, size: 24),
+                            ),
+                            16.width,
+                            Expanded(child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Premium'a Geçin", style: boldTextStyle(color: Colors.white, size: 18)),
+                                Text("Sınırsız erişim ve ayrıcalıklar", style: secondaryTextStyle(color: Colors.white, size: 12)),
+                              ],
+                            )),
+                            Icon(Icons.arrow_forward_ios, color: Colors.white, size: 16),
+                          ],
+                        ),
+                      ),
+                    ),
+
                     30.height,
                   ],
                 ),
