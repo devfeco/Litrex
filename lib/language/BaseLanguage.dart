@@ -175,4 +175,6 @@ abstract class BaseLanguage {
   String get lblDeviceResetByAdmin;
   String get lblAccountSuspended;
   String get lblGetPremiumToRead;
+  String get lblYouArePremium;
+  String get lblPremiumDesc;
 }

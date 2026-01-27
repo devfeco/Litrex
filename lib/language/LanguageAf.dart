@@ -265,4 +265,6 @@ class LanguageAf extends BaseLanguage {
   @override String get lblDeviceResetByAdmin => "Your device has been reset by the administrator.";
   @override String get lblAccountSuspended => "Your account has been suspended. Please contact support.";
   @override String get lblGetPremiumToRead => "Get Premium to Read";
+  @override String get lblYouArePremium => "You are a Premium Member";
+  @override String get lblPremiumDesc => "Enjoy your exclusive benefits";
 }

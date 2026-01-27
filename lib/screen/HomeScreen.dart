@@ -194,6 +194,7 @@ class HomeScreenState extends State<HomeScreen> {
         title: Text(AppName,
             style: boldTextStyle(size: 20, color: Colors.white)),
         actions: [
+          if (!authStore.isPremiumUser)
           Container(
             margin: EdgeInsets.all(8),
             decoration: BoxDecoration(
