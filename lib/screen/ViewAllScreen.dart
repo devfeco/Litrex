@@ -4,6 +4,8 @@ import '../screen/BookDetailScreen.dart';
 import '../utils/Extensions/Widget_extensions.dart';
 import '../utils/appWidget.dart';
 import '../utils/constant.dart';
+import '../component/NativeAdWidget.dart';
+
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
 import '../main.dart';
@@ -197,16 +199,24 @@ class ViewAllScreenState extends State<ViewAllScreen> {
                 shrinkWrap: true,
                 primary: false,
                 physics: NeverScrollableScrollPhysics(),
-                itemCount: mBookList.length,
+                itemCount: mBookList.length + (mBookList.length ~/ 5),
                 padding: EdgeInsets.all(12),
                 itemBuilder: (_, i) {
+                  if ((i + 1) % 6 == 0) {
+                    return NativeAdWidget();
+                  }
+                  
+                  int bookIndex = i - (i ~/ 6);
+                  if (bookIndex >= mBookList.length) return SizedBox();
+
                   return ItemWidget(
-                    mBookList[i],
+                    mBookList[bookIndex],
                     onTap: () async {
-                      BookDetailScreen(data: mBookList[i]).launch(context, pageRouteAnimation: PageRouteAnimation.Slide);
+                      BookDetailScreen(data: mBookList[bookIndex]).launch(context, pageRouteAnimation: PageRouteAnimation.Slide);
                     },
                   );
                 },
+
               ),
             ),
             if (!appStore.isLoading && mBookList.isEmpty) noDataWidget(context).center(),

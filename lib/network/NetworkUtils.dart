@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import '../main.dart';
 
 import '../utils/Extensions/int_extensions.dart';
 import '../utils/constant.dart';
@@ -9,6 +10,7 @@ import 'package:http/http.dart' as http;
 import '../utils/Extensions/Constants.dart';
 import '../utils/Extensions/Widget_extensions.dart';
 import '../utils/Extensions/network_utils.dart';
+import '../utils/Extensions/string_extensions.dart';
 
 Map<String, String> buildHeaderTokens() {
   Map<String, String> header = {
@@ -18,6 +20,10 @@ Map<String, String> buildHeaderTokens() {
     'Access-Control-Allow-Headers': '*',
     'Access-Control-Allow-Origin': '*',
   };
+
+  if (authStore.authToken.validate().isNotEmpty) {
+    header.putIfAbsent(HttpHeaders.authorizationHeader, () => 'Bearer ${authStore.authToken}');
+  }
 
   log(jsonEncode(header));
   return header;

@@ -1,3 +1,4 @@
+import '../network/AuthApis.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import '../component/PDFViewerComponent.dart';
@@ -14,6 +15,7 @@ import 'CategoryScreen.dart';
 import 'HomeScreen.dart';
 import 'auth/ProfileScreen.dart';
 import 'WebViewScreen.dart';
+import '../main.dart'; // Ensure main is imported for authStore
 
 class DashboardScreen extends StatefulWidget {
   static String tag = '/DashboardScreen';
@@ -48,6 +50,15 @@ class DashboardScreenState extends State<DashboardScreen> {
             PDFViewerComponent(title: notification.notification.title.validate(),url: notification.notification.launchUrl!).launch(context);
           }
         }
+      });
+    }
+
+    // Kullanıcı giriş yapmışsa profil bilgilerini güncelle (Premium durumu için önemli)
+    if (authStore.isLoggedIn) {
+      getProfile().then((value) {
+        authStore.setUser(value);
+      }).catchError((e) {
+        print("Profil senkronizasyon hatası: $e");
       });
     }
   }

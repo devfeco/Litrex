@@ -26,6 +26,7 @@ dependencies:
   firebase_core: ^4.1.1
   firebase_crashlytics: ^5.0.2
   firebase_core_platform_interface: ^6.0.1
+  google_sign_in: ^6.2.1
 
   #STATE MANAGEMENT
   mobx: ^2.5.0

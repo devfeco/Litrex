@@ -5,6 +5,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../network/AuthApis.dart';
 import '../../main.dart';
 import '../../utils/colors.dart';
 import '../../utils/Extensions/Widget_extensions.dart';
@@ -120,8 +121,25 @@ class _PremiumScreenState extends State<PremiumScreen> with SingleTickerProvider
   }
   
   Future<bool> _verifyPurchase(PurchaseDetails purchaseDetails) async {
-    // Backend verification placeholder
-    return true; 
+    try {
+      // Backend'e doğrulama gönder
+      final response = await updatePremiumStatus(
+        purchaseToken: purchaseDetails.verificationData.serverVerificationData, // Google Play için token
+        productId: purchaseDetails.productID,
+        orderId: purchaseDetails.purchaseID ?? '',
+        purchaseTime: purchaseDetails.transactionDate ?? '',
+      );
+      
+      if (response.success == true && response.user != null) {
+        // Başarılı ise store'u güncelle
+        await authStore.setUser(response.user);
+        return true;
+      }
+      return false;
+    } catch (e) {
+      print("Premium Doğrulama Hatası: $e");
+      return false;
+    }
   }
 
   void _buyProduct(ProductDetails prod) {

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import '../../main.dart';
 import '../../model/UserModel.dart';
@@ -96,6 +97,11 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
         );
         
         if (response.success == true && response.user != null) {
+          log("Login API Response Status: ${response.user?.status}");
+          if (response.user?.status == 'banned') {
+            toast(language.lblAccountSuspended);
+            return;
+          }
           await authStore.setUser(response.user);
           await authStore.setAuthToken(response.token);
           await authStore.setLoggedIn(true);
@@ -118,8 +124,60 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
     }
   }
 
-  void _handleGoogleLogin() {
-    toast(language.lblComingSoon);
+  Future<void> _handleGoogleLogin() async {
+    setState(() => isLoading = true);
+    
+    try {
+      final GoogleSignIn googleSignIn = GoogleSignIn(
+        scopes: ['email', 'profile'],
+      );
+      
+      // Önceki oturumu kapat (farklı hesap seçebilmek için)
+      if (await googleSignIn.isSignedIn()) {
+        await googleSignIn.signOut();
+      }
+      
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+      
+      if (googleUser != null) {
+        final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+        String? deviceId = await _getDeviceId();
+        
+        final response = await googleLogin(
+          email: googleUser.email,
+          displayName: googleUser.displayName ?? "",
+          idToken: googleAuth.idToken,
+          photoUrl: googleUser.photoUrl,
+          deviceId: deviceId,
+        );
+        
+        if (response.success == true && response.user != null) {
+          log("Google Login API Response Status: ${response.user?.status}");
+          if (response.user?.status == 'banned') {
+            toast(language.lblAccountSuspended);
+            return;
+          }
+          await authStore.setUser(response.user);
+          await authStore.setAuthToken(response.token);
+          await authStore.setLoggedIn(true);
+          
+          toast(language.lblLoginSuccess);
+          
+          if (getStringListAsync(chooseTopicList) != null) {
+            DashboardScreen().launch(context, isNewTask: true);
+          } else {
+            ChooseTopicScreen(isVisibleBack: false).launch(context, isNewTask: true);
+          }
+        } else {
+          toast(response.message ?? language.lblLoginFailed);
+        }
+      }
+    } catch (e) {
+      log(e.toString());
+      toast("Google giriş hatası: ${e.toString()}");
+    } finally {
+      setState(() => isLoading = false);
+    }
   }
 
   void _handleAppleLogin() {
@@ -326,7 +384,7 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                               isGoogle: true,
                             ),
                           ),
-                          SizedBox(width: 12),
+                          /*SizedBox(width: 12),
                           Expanded(
                             child: _buildSocialButton(
                               icon: Icons.apple,
@@ -334,7 +392,7 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                               onTap: _handleAppleLogin,
                               isGoogle: false,
                             ),
-                          ),
+                          ),*/
                         ],
                       ),
                       

@@ -18,6 +18,7 @@ import '../BookmarkScreen.dart';
 import 'EditProfileScreen.dart';
 import 'LoginScreen.dart';
 import '../PremiumScreen.dart';
+import '../DownloadScreen.dart';
 
 class ProfileScreen extends StatefulWidget {
   static String tag = '/ProfileScreen';
@@ -341,6 +342,16 @@ class ProfileScreenState extends State<ProfileScreen> {
                     onTap: _showChangePasswordDialog,
                   ),
                   
+
+
+                  // Downloaded Books
+                  _buildMenuItem(
+                    icon: Ionicons.cloud_download_outline,
+                    title: language.lblDownloads,
+                    subtitle: language.lblOfflineLibrary,
+                    onTap: () => DownloadScreen().launch(context),
+                  ),
+
                   // Bookmarks
                   _buildMenuItem(
                     icon: Ionicons.bookmarks_outline,
@@ -378,6 +389,16 @@ class ProfileScreenState extends State<ProfileScreen> {
                     title: language.lblHelpSupport,
                     subtitle: language.lblGetHelp,
                     onTap: () {},
+                  ),
+
+                  // Hesabı Sil
+                   _buildMenuItem(
+                    icon: Ionicons.trash_outline,
+                    title: language.lblDeleteAccount,
+                    subtitle: language.lblDeleteAccountWarning,
+                    onTap: _showDeleteAccountDialog,
+                    iconColor: Colors.red,
+                    titleColor: Colors.red,
                   ),
                   
                   24.height,
@@ -435,6 +456,8 @@ class ProfileScreenState extends State<ProfileScreen> {
     required String subtitle,
     VoidCallback? onTap,
     Widget? trailing,
+    Color? iconColor,
+    Color? titleColor,
   }) {
     return InkWell(
       onTap: onTap,
@@ -445,17 +468,17 @@ class ProfileScreenState extends State<ProfileScreen> {
             Container(
               padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: primaryColor.withOpacity(0.1),
+                color: (iconColor ?? primaryColor).withOpacity(0.1),
                 borderRadius: radius(12),
               ),
-              child: Icon(icon, color: primaryColor, size: 22),
+              child: Icon(icon, color: iconColor ?? primaryColor, size: 22),
             ),
             16.width,
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: boldTextStyle(size: 15)),
+                  Text(title, style: boldTextStyle(size: 15, color: titleColor)),
                   4.height,
                   Text(subtitle, style: secondaryTextStyle(size: 12)),
                 ],
@@ -554,6 +577,74 @@ class ProfileScreenState extends State<ProfileScreen> {
               shape: RoundedRectangleBorder(borderRadius: radius(10)),
             ),
             child: Text(language.lblUpdate, style: boldTextStyle(color: Colors.white, size: 14)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showDeleteAccountDialog() {
+    final passwordController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: radius(16)),
+        title: Text(language.lblDeleteAccount, style: boldTextStyle(size: 18, color: Colors.red)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(language.lblDeleteAccountWarning, style: primaryTextStyle(size: 14)),
+            16.height,
+            TextField(
+              controller: passwordController,
+              obscureText: true,
+              decoration: InputDecoration(
+                labelText: language.lblPassword,
+                hintText: language.lblEnterPasswordToConfirm,
+                border: OutlineInputBorder(borderRadius: radius(12)),
+                contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(language.lblCancel, style: primaryTextStyle(color: Colors.grey)),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              if (passwordController.text.isEmpty) {
+                toast(language.lblPleaseEnterPassword);
+                return;
+              }
+              
+              Navigator.pop(context);
+              
+              setState(() => isLoading = true);
+              try {
+                final response = await deleteAccount(password: passwordController.text);
+                
+                if (response['success'] == true) {
+                  await authStore.logout();
+                  toast(language.lblAccountDeleted);
+                  LoginScreen().launch(context, isNewTask: true);
+                } else {
+                  toast(response['message'] ?? language.lblSomethingWentWrong);
+                }
+              } catch (e) {
+                toast(e.toString());
+              } finally {
+                setState(() => isLoading = false);
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              shape: RoundedRectangleBorder(borderRadius: radius(10)),
+            ),
+            child: Text(language.lblDelete, style: boldTextStyle(color: Colors.white, size: 14)),
           ),
         ],
       ),

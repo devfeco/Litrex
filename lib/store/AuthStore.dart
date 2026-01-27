@@ -44,6 +44,7 @@ abstract class _AuthStore with Store {
       await setValue(USER_AVATAR, user.avatar ?? '');
       await setValue(USER_BIO, user.bio ?? '');
       await setValue('IS_PREMIUM', user.isPremium ?? 0);
+      await setValue('STATUS', user.status ?? 'active');
 
     }
   }
@@ -70,6 +71,7 @@ abstract class _AuthStore with Store {
         avatar: getStringAsync(USER_AVATAR),
         bio: getStringAsync(USER_BIO),
         isPremium: getIntAsync('IS_PREMIUM'),
+        status: getStringAsync('STATUS', defaultValue: 'active'),
       );
 
     }
@@ -90,6 +92,7 @@ abstract class _AuthStore with Store {
     await setValue(USER_AVATAR, '');
     await setValue(USER_BIO, '');
     await setValue('IS_PREMIUM', 0);
+    await setValue('STATUS', '');
 
   }
 }

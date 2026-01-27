@@ -1,6 +1,17 @@
 // lib/component/NativeAdWidget.dart
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:flutter/foundation.dart';
+import '../main.dart'; // To access authStore
+import '../utils/constant.dart';
+import '../utils/Extensions/context_extensions.dart';
+import '../utils/Extensions/Widget_extensions.dart';
+import '../utils/Extensions/text_styles.dart';
+import '../utils/Extensions/int_extensions.dart';
+import '../utils/Extensions/Constants.dart';
+import '../utils/Extensions/decorations.dart';
+import '../utils/appWidget.dart';
+import '../utils/colors.dart';
 
 class NativeAdWidget extends StatefulWidget {
   @override
@@ -14,21 +25,24 @@ class _NativeAdWidgetState extends State<NativeAdWidget> {
   @override
   void initState() {
     super.initState();
-    _loadRealBanner();
+    if (!authStore.isPremiumUser) {
+      _loadNativeBanner();
+    }
   }
 
-  void _loadRealBanner() {
-    _bannerAd = BannerAd(
-      adUnitId: 'ca-app-pub-2970306107465777/4585793055', // SƏNİN ORİJİNAL ID
-      size: AdSize.banner,
+  void _loadNativeBanner() {
+     _bannerAd = BannerAd(
+      adUnitId: kReleaseMode
+          ? 'ca-app-pub-2970306107465777/4585793055' 
+          : 'ca-app-pub-3940256099942544/6300978111', // Test
+      size: AdSize.mediumRectangle,
       request: AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (_) {
-          print('REAL BANNER YÜKLƏNDİ!');
           if (mounted) setState(() => _isLoaded = true);
         },
         onAdFailedToLoad: (ad, err) {
-          print('XƏTA: $err');
+          print('Native Ad failed: $err');
           ad.dispose();
         },
       ),
@@ -43,55 +57,93 @@ class _NativeAdWidgetState extends State<NativeAdWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(color: Colors.grey.withOpacity(0.2), blurRadius: 8, offset: Offset(0, 2)),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(12),
-        child: Column(
-          children: [
-            // Başlıq
-            Container(
-              padding: EdgeInsets.all(12),
-              color: Colors.grey[50],
-              child: Row(
-                children: [
-                  Icon(Icons.menu_book, color: Colors.orange),
-                  SizedBox(width: 8),
-                  Text('Tövsiyə olunan kitab', style: TextStyle(fontWeight: FontWeight.w600)),
-                  Spacer(),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(color: Colors.green, borderRadius: BorderRadius.circular(4)),
-                    child: Text('Ad', style: TextStyle(color: Colors.white, fontSize: 10)),
+    if (authStore.isPremiumUser) return SizedBox.shrink();
+    if (!_isLoaded) return SizedBox.shrink();
+
+    // Bu tasarım lib/component/ItemWidget.dart ve lib/component/CategoryItemWidget.dart 
+    // ile birebir uyumlu olacak şekilde yapılmıştır.
+    return InkWell(
+      highlightColor: Colors.transparent,
+      splashColor: Colors.transparent,
+      onTap: () {
+        // Reklam tıklandığında AdMob zaten hallediyor.
+      },
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Stack(
+            children: [
+              // Reklam alanı (Görsel alanı gibi davranır)
+              Container(
+                width: 105,
+                height: 140,
+                decoration: boxDecorationWithRoundedCornersWidget(
+                  backgroundColor: context.dividerColor.withOpacity(0.1),
+                  borderRadius: radius(defaultRadius),
+                ),
+                child: ClipRRect(
+                  borderRadius: radius(defaultRadius),
+                  child: AdWidget(ad: _bannerAd!),
+                ),
+              ),
+              // Sponsorlu Etiketi
+              Positioned(
+                top: 0,
+                right: 0,
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: Colors.black54,
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(defaultRadius.toDouble()),
+                      bottomLeft: Radius.circular(4),
+                    ),
                   ),
+                  child: Text('AD', style: primaryTextStyle(color: Colors.white, size: 8, weight: FontWeight.bold)),
+                ),
+              ),
+            ],
+          ),
+          12.width,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                   Container(
+                     padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                     decoration: BoxDecoration(
+                       color: primaryColor.withOpacity(0.1),
+                       borderRadius: radius(4),
+                     ),
+                     child: Text("Sponsorlu", style: boldTextStyle(size: 10, color: primaryColor)),
+                   ),
+                   Icon(Icons.more_horiz, size: 16, color: context.dividerColor),
                 ],
               ),
-            ),
-
-            // REAL BANNER
-            if (_isLoaded)
-              Container(
-                width: double.infinity,
-                height: 50,
-                child: AdWidget(ad: _bannerAd!),
-              )
-            else
-              Container(
-                width: double.infinity,
-                height: 50,
-                color: Colors.grey[200],
-                child: Center(child: Text('Reklam yüklənir...', style: TextStyle(fontSize: 12))),
+              4.height,
+              Text(
+                "Harika Bir Öneri Senin İçin!", // Reklam başlığı simülasyonu
+                maxLines: 2, 
+                overflow: TextOverflow.ellipsis, 
+                style: boldTextStyle()
               ),
-          ],
-        ),
-      ),
+              8.height,
+              Text(
+                "İlgini çekebilecek bu içeriğe göz atmak için tıkla. Sponsorlu reklamlar uygulamamızı geliştirmemize yardımcı olur.",
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.start,
+                maxLines: 3,
+                style: secondaryTextStyle(size: 13)
+              ).paddingRight(16),
+            ],
+          ).expand()
+        ],
+      ).paddingSymmetric(horizontal: 16, vertical: 12),
     );
   }
 }
+

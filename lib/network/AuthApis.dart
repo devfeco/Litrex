@@ -201,3 +201,58 @@ Future<Map<String, dynamic>> verifyEmail({
   );
   return await handleResponse(response);
 }
+
+/// Premium Durumunu Güncelle
+Future<AuthResponse> updatePremiumStatus({
+  required String purchaseToken,
+  required String productId,
+  required String orderId,
+  required String purchaseTime,
+}) async {
+  final response = await buildHttpResponse(
+    'OST_premium_status.php',
+    method: HttpMethod.POST,
+    request: {
+      'purchase_token': purchaseToken,
+      'product_id': productId,
+      'order_id': orderId,
+      'purchase_time': purchaseTime,
+    },
+  );
+  return AuthResponse.fromJson(await handleResponse(response));
+}
+
+/// Google Giriş
+Future<AuthResponse> googleLogin({
+  required String email,
+  required String displayName,
+  String? idToken,
+  String? photoUrl,
+  String? deviceId,
+}) async {
+  final response = await buildHttpResponse(
+    'auth/google_login.php',
+    method: HttpMethod.POST,
+    request: {
+      'email': email,
+      'name': displayName,
+      if (idToken != null) 'id_token': idToken,
+      if (photoUrl != null) 'photo_url': photoUrl,
+      if (deviceId != null) 'device_id': deviceId,
+    },
+  );
+  return AuthResponse.fromJson(await handleResponse(response));
+}
+/// Cihaz Sıfırlama Kontrolü
+Future<Map<String, dynamic>> checkDeviceReset({
+  required String deviceId,
+}) async {
+  final response = await buildHttpResponse(
+    'auth/check_reset.php',
+    method: HttpMethod.POST,
+    request: {
+      'device_id': deviceId,
+    },
+  );
+  return await handleResponse(response);
+}

@@ -154,4 +154,24 @@ abstract class BaseLanguage {
   String get lblChoosePhoto;
   String get lblCamera;
   String get lblGallery;
+
+  // Offline Reading / Downloads
+  String get lblDownloads;
+  String get lblOfflineLibrary;
+  String get lblYouHave;
+  String get lblDownloadedBooks;
+  String get lblTapToStartReading;
+  String get lblNoDownloadedBooks;
+  String get lblDownloadToReadOffline;
+  String get lblRemoveDownloadTitle;
+  String get lblRemoveDownloadMsg;
+  String get lblDeleteBookTitle;
+  String get lblDeleteBookMsg;
+  String get lblDownloadComplete;
+  String get lblDownloadFailed;
+  String get lblOfflineReadToast;
+  String get lblErrorOpeningBook;
+  String get lblUnknownTitle;
+  String get lblDeviceResetByAdmin;
+  String get lblAccountSuspended;
 }

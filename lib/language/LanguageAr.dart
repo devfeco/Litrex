@@ -244,4 +244,24 @@ class LanguageAr extends BaseLanguage {
   @override String get lblChoosePhoto => "اختر صورة";
   @override String get lblCamera => "الكاميرا";
   @override String get lblGallery => "المعرض";
+
+  // Offline Reading / Downloads
+  @override String get lblDownloads => "Downloads";
+  @override String get lblOfflineLibrary => "Offline Library";
+  @override String get lblYouHave => "You have";
+  @override String get lblDownloadedBooks => "downloaded books";
+  @override String get lblTapToStartReading => "Tap to start reading";
+  @override String get lblNoDownloadedBooks => "No downloaded books found";
+  @override String get lblDownloadToReadOffline => "Download books to read offline";
+  @override String get lblRemoveDownloadTitle => "Remove Download?";
+  @override String get lblRemoveDownloadMsg => "Are you sure you want to remove this book from offline storage?";
+  @override String get lblDeleteBookTitle => "Delete Book?";
+  @override String get lblDeleteBookMsg => "Are you sure you want to remove this book from downloads?";
+  @override String get lblDownloadComplete => "Download Complete";
+  @override String get lblDownloadFailed => "Download Failed";
+  @override String get lblOfflineReadToast => "Start reading from your offline library.";
+  @override String get lblErrorOpeningBook => "Error opening book. File might be corrupted.";
+  @override String get lblUnknownTitle => "Unknown Title";
+  @override String get lblDeviceResetByAdmin => "Your device has been reset by the administrator.";
+  @override String get lblAccountSuspended => "Your account has been suspended. Please contact support.";
 }

@@ -22,6 +22,8 @@ import '../utils/Extensions/shared_pref.dart';
 import 'AboutUsScreen.dart';
 import 'LanguageScreen.dart';
 import 'WebViewScreen.dart';
+import '../network/AuthApis.dart';
+import 'auth/LoginScreen.dart';
 
 class SettingScreen extends StatefulWidget {
   static String tag = '/SettingScreen';
@@ -181,9 +183,99 @@ class SettingScreenState extends State<SettingScreen> {
                 AboutUsScreen().launch(context, pageRouteAnimation: PageRouteAnimation.SlideBottomTop);
               },
             ),
+            
+            // Hesap Yönetimi (Sadece giriş yapılmışsa)
+            if (authStore.isLoggedIn) ...[
+              16.height,
+              Divider(thickness: 3).paddingOnly(left: 16, right: 16),
+              16.height,
+              Row(
+                children: [
+                  Container(color: Colors.red, width: 4, height: 16),
+                  6.width,
+                  Text(language.lblDeleteAccount, style: boldTextStyle(color: Colors.red, size: 14)),
+                ],
+              ).paddingOnly(left: 16, right: 16, bottom: 4),
+              SettingItemWidget(
+                title: language.lblDeleteAccount,
+                subTitle: language.lblDeleteAccountWarning,
+                leading: Icon(Ionicons.trash_outline, color: Colors.red),
+                titleTextStyle: boldTextStyle(color: Colors.red),
+                onTap: () {
+                  // ProfileScreen'deki diyalogu buraya da taşıyabiliriz veya oraya yönlendirebiliriz.
+                  // Şimdilik doğrudan silme akışını başlatalım (ProfileScreen'deki ile aynı)
+                  _showDeleteAccountDialog(context);
+                },
+              ),
+            ],
             16.height,
           ],
         ),
+      ),
+    );
+  }
+
+  void _showDeleteAccountDialog(BuildContext context) {
+    final passwordController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: radius(16)),
+        title: Text(language.lblDeleteAccount, style: boldTextStyle(size: 18, color: Colors.red)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(language.lblDeleteAccountWarning, style: primaryTextStyle(size: 14)),
+            16.height,
+            TextField(
+              controller: passwordController,
+              obscureText: true,
+              decoration: InputDecoration(
+                labelText: language.lblPassword,
+                hintText: language.lblEnterPasswordToConfirm,
+                border: OutlineInputBorder(borderRadius: radius(12)),
+                contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(language.lblCancel, style: primaryTextStyle(color: Colors.grey)),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              if (passwordController.text.isEmpty) {
+                toast(language.lblPleaseEnterPassword);
+                return;
+              }
+              
+              Navigator.pop(context);
+              
+              try {
+                final response = await deleteAccount(password: passwordController.text);
+                
+                if (response['success'] == true) {
+                   await authStore.logout();
+                   toast(language.lblAccountDeleted);
+                   LoginScreen().launch(context, isNewTask: true);
+                } else {
+                  toast(response['message'] ?? language.lblSomethingWentWrong);
+                }
+              } catch (e) {
+                toast(e.toString());
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              shape: RoundedRectangleBorder(borderRadius: radius(10)),
+            ),
+            child: Text(language.lblDelete, style: boldTextStyle(color: Colors.white, size: 14)),
+          ),
+        ],
       ),
     );
   }

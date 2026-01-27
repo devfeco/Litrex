@@ -20,6 +20,8 @@ import 'package:flutter/widgets.dart';
 import '../utils/OfflineReadingService.dart';
 import '../screen/PremiumScreen.dart';
 import 'WebViewScreen.dart';
+import '../component/NativeAdWidget.dart';
+
 
 
 class BookDetailScreen extends StatefulWidget {
@@ -127,8 +129,11 @@ class BookDetailScreenState extends State<BookDetailScreen> {
             35.height,
             Text(language.lblDescription, style: boldTextStyle()).paddingOnly(left: 16, bottom: 8),
             Text(parseHtmlString(widget.data.description.validate()), style: secondaryTextStyle(size: 16)).paddingOnly(left: 16, right: 16, bottom: 16),
+            NativeAdWidget(),
+            24.height,
           ],
         ),
+
       ),
       bottomNavigationBar: Container(
         width: context.width(),
@@ -160,8 +165,8 @@ class BookDetailScreenState extends State<BookDetailScreen> {
                    showDialog(
                      context: context,
                      builder: (c) => AlertDialog(
-                       title: Text("Remove Download?", style: boldTextStyle()),
-                       content: Text("Are you sure you want to remove this book from offline storage?", style: secondaryTextStyle()),
+                       title: Text(language.lblRemoveDownloadTitle, style: boldTextStyle()),
+                       content: Text(language.lblRemoveDownloadMsg, style: secondaryTextStyle()),
                        actions: [
                          TextButton(
                            child: Text(language.lblCancel, style: primaryTextStyle()),
@@ -187,7 +192,7 @@ class BookDetailScreenState extends State<BookDetailScreen> {
                    
                    try {
                       await OfflineReadingService().downloadBook(
-                        widget.data.id!, 
+                        widget.data, 
                         widget.data.file ?? widget.data.url ?? "",
                         onReceiveProgress: (rec, total) {
                           setState(() {
@@ -196,9 +201,9 @@ class BookDetailScreenState extends State<BookDetailScreen> {
                         }
                       );
                       isDownloaded = true;
-                      toast("Download Complete");
+                      toast(language.lblDownloadComplete);
                    } catch (e) {
-                      toast("Download Failed: $e");
+                      toast("${language.lblDownloadFailed}: $e");
                    } finally {
                       setState(() {
                          isDownloading = false;
@@ -217,6 +222,11 @@ class BookDetailScreenState extends State<BookDetailScreen> {
             Container(width: 2, height: 50, color: Colors.white),
             GestureDetector(
               onTap: () async {
+                if (widget.data.isPremium == '1' && !authStore.isPremiumUser) {
+                   PremiumScreen().launch(context);
+                   return;
+                }
+
                 if (widget.data.type == "file") {
                   if (widget.data.type.isEmptyOrNull) {
                     toast(language.lblTryAgain);
@@ -252,7 +262,13 @@ class BookDetailScreenState extends State<BookDetailScreen> {
                 }
               },
 
-              child: Text(language.lblReadBook, style: boldTextStyle(size: 18, color: Colors.white), textAlign: TextAlign.center),
+              child: Text(
+                (widget.data.isPremium == '1' && !authStore.isPremiumUser) 
+                    ? "Get Premium to Read" 
+                    : language.lblReadBook, 
+                style: boldTextStyle(size: 18, color: Colors.white), 
+                textAlign: TextAlign.center
+              ),
             ).expand()
           ],
         ),

@@ -8,6 +8,7 @@ class UserModel {
   String? createdAt;
   String? updatedAt;
   int? isPremium;
+  String? status;
 
 
   UserModel({
@@ -20,6 +21,7 @@ class UserModel {
     this.createdAt,
     this.updatedAt,
     this.isPremium,
+    this.status,
   });
 
 
@@ -35,6 +37,7 @@ class UserModel {
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
       isPremium: json['is_premium'] is String ? int.tryParse(json['is_premium']) : json['is_premium'],
+      status: json['status'],
     );
 
   }
@@ -51,6 +54,7 @@ class UserModel {
       'created_at': createdAt,
       'updated_at': updatedAt,
       'is_premium': isPremium,
+      'status': status,
     };
 
   }
@@ -70,10 +74,17 @@ class AuthResponse {
   });
 
   factory AuthResponse.fromJson(Map<String, dynamic> json) {
+    UserModel? user = json['user'] != null ? UserModel.fromJson(json['user']) : null;
+    
+    // Eğer user objesi içinde status yoksa veya ana response'da farklı bir status varsa oradan al
+    if (user != null && json['user_status'] != null) {
+      user.status = json['user_status'];
+    }
+    
     return AuthResponse(
       success: json['success'],
       message: json['message'],
-      user: json['user'] != null ? UserModel.fromJson(json['user']) : null,
+      user: user,
       token: json['token'],
     );
   }

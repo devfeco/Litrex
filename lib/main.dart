@@ -132,10 +132,10 @@ class _MyAppState extends State<MyApp> {
       if (e == ConnectivityResult.none) {
         log('not connected');
         isCurrentlyOnNoInternet = true;
-        push(NoInternetScreen());
+        // Do not block the user with NoInternetScreen
+        toast(language.lblOfflineReadToast);
       } else {
         if (isCurrentlyOnNoInternet) {
-          pop();
           isCurrentlyOnNoInternet = false;
           toast('Internet is connected.');
         }

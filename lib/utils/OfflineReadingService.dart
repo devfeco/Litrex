@@ -8,6 +8,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../model/OfflineBookModel.dart';
+import '../model/DashboardResponse.dart';
+import '../utils/Extensions/string_extensions.dart';
 
 class OfflineReadingService {
   static final OfflineReadingService _instance = OfflineReadingService._internal();
@@ -52,7 +54,8 @@ class OfflineReadingService {
   }
 
   // Download and Encrypt Book
-  Future<void> downloadBook(String bookId, String fileUrl, {Function(int, int)? onReceiveProgress}) async {
+  Future<void> downloadBook(Book bookData, String fileUrl, {Function(int, int)? onReceiveProgress}) async {
+    final bookId = bookData.id!;
     try {
       // 1. Download file
       final response = await _dio.get(
@@ -88,6 +91,11 @@ class OfflineReadingService {
         id: bookId,
         filePath: filePath,
         downloadDate: DateTime.now().toIso8601String(),
+        bookName: bookData.name.validate(value: "Book"),
+        authorName: bookData.authorName.validate(value: "Unknown Author"),
+        bookImage: bookData.logo.validate(),
+        isPremium: bookData.isPremium,
+        fileType: bookData.type,
       ));
 
       final prefs = await SharedPreferences.getInstance();
@@ -145,5 +153,19 @@ class OfflineReadingService {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(_booksPrefsKey, jsonEncode(books.map((b) => b.toJson()).toList()));
     }
+  }
+
+  // Clear All Downloads
+  Future<void> clearAllBooks() async {
+    final books = await getDownloadedBooks();
+    for (final book in books) {
+      final file = File(book.filePath);
+      if (await file.exists()) {
+        await file.delete();
+      }
+    }
+    
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_booksPrefsKey);
   }
 }

@@ -156,7 +156,6 @@ class WebViewScreenState extends State<WebViewScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(language.lblNoInternet, style: primaryTextStyle()),
                     ],
                   ),
                 ),

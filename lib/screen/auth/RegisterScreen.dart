@@ -20,6 +20,7 @@ import '../../utils/constant.dart';
 import '../../utils/images.dart';
 import '../ChooseTopicScreen.dart';
 import '../DashboardScreen.dart';
+import '../WebViewScreen.dart';
 import 'LoginScreen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -573,13 +574,25 @@ class RegisterScreenState extends State<RegisterScreen>
                     TextSpan(
                       text: language.lblTermsOfService,
                       style: boldTextStyle(color: primaryColor, size: 13),
-                      recognizer: TapGestureRecognizer()..onTap = () {},
+                      recognizer: TapGestureRecognizer()..onTap = () {
+                        if (getStringAsync(TERMS_AND_CONDITION_PREF).isNotEmpty) {
+                          WebViewScreen(title: language.lblTermsOfService, mInitialUrl: getStringAsync(TERMS_AND_CONDITION_PREF)).launch(context);
+                        } else {
+                          toast(language.lblUrlEmpty);
+                        }
+                      },
                     ),
                     TextSpan(text: ' ${language.lblAnd} '),
                     TextSpan(
                       text: language.lblPrivacyPolicy,
                       style: boldTextStyle(color: primaryColor, size: 13),
-                      recognizer: TapGestureRecognizer()..onTap = () {},
+                      recognizer: TapGestureRecognizer()..onTap = () {
+                        if (getStringAsync(PRIVACY_POLICY_PREF).isNotEmpty) {
+                          WebViewScreen(title: language.lblPrivacyPolicy, mInitialUrl: getStringAsync(PRIVACY_POLICY_PREF)).launch(context);
+                        } else {
+                          toast(language.lblUrlEmpty);
+                        }
+                      },
                     ),
                   ],
                 ),

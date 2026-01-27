@@ -13,6 +13,8 @@ import '../utils/Extensions/decorations.dart';
 import '../utils/colors.dart';
 import '../utils/constant.dart';
 import 'BookDetailScreen.dart';
+import '../component/NativeAdWidget.dart';
+
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -119,16 +121,24 @@ class _SearchScreenState extends State<SearchScreen> {
                     controller: scrollController,
                     shrinkWrap: true,
                     primary: false,
-                    itemCount: mSearchList.length,
+                    itemCount: mSearchList.length + (mSearchList.length ~/ 5),
                     padding: EdgeInsets.all(12),
                     itemBuilder: (_, i) {
+                      if ((i + 1) % 6 == 0) {
+                        return NativeAdWidget();
+                      }
+
+                      int bookIndex = i - (i ~/ 6);
+                      if (bookIndex >= mSearchList.length) return SizedBox();
+
                       return ItemWidget(
-                        mSearchList[i],
+                        mSearchList[bookIndex],
                         onTap: () async {
-                          BookDetailScreen(data: mSearchList[i]).launch(context, pageRouteAnimation: PageRouteAnimation.Slide);
+                          BookDetailScreen(data: mSearchList[bookIndex]).launch(context, pageRouteAnimation: PageRouteAnimation.Slide);
                         },
                       );
                     },
+
                   ).expand(),
               ],
             ),

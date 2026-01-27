@@ -58,9 +58,34 @@ class ItemWidgetState extends State<ItemWidget> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              widget.data.logo != null && widget.data.logo!.isNotEmpty
-                  ? cachedImage(widget.data.logo, fit: BoxFit.fill, width: width, height: 220).cornerRadiusWithClipRRect(defaultRadius).paddingOnly(left: 4)
-                  : Image.asset(ic_placeholder, fit: BoxFit.fill, width: width, height: 220).cornerRadiusWithClipRRect(defaultRadius),
+              Stack(
+                children: [
+                  widget.data.logo != null && widget.data.logo!.isNotEmpty
+                      ? cachedImage(widget.data.logo, fit: BoxFit.fill, width: width, height: 220).cornerRadiusWithClipRRect(defaultRadius).paddingOnly(left: 4)
+                      : Image.asset(ic_placeholder, fit: BoxFit.fill, width: width, height: 220).cornerRadiusWithClipRRect(defaultRadius),
+                  if (widget.data.isPremium == '1')
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.amber,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 4)],
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.diamond, color: Colors.white, size: 12),
+                            4.width,
+                            Text("Premium", style: boldTextStyle(color: Colors.white, size: 10)),
+                          ],
+                        ),
+                      ),
+                    ),
+                ],
+              ),
               6.height,
               Text(parseHtmlStringWidget(widget.data.name!.trim()), textAlign: TextAlign.start, maxLines: 2, overflow: TextOverflow.ellipsis, style: primaryTextStyle()).paddingSymmetric(horizontal: 4),
             ],
@@ -80,8 +105,25 @@ class ItemWidgetState extends State<ItemWidget> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (widget.data.logo != null && widget.data.logo!.isNotEmpty)
-                cachedImage(widget.data.logo, fit: BoxFit.fill, width: 150, height: 200).cornerRadiusWithClipRRect(defaultRadius).paddingOnly(left: 4, right: 4),
+              Stack(
+                children: [
+                   if (widget.data.logo != null && widget.data.logo!.isNotEmpty)
+                    cachedImage(widget.data.logo, fit: BoxFit.fill, width: 150, height: 200).cornerRadiusWithClipRRect(defaultRadius).paddingOnly(left: 4, right: 4),
+                   if (widget.data.isPremium == '1')
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: Colors.amber,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                         child: Icon(Icons.diamond, color: Colors.white, size: 14),
+                      ),
+                    ),
+                ],
+              ),
               6.height,
               Text(parseHtmlStringWidget(widget.data.name!.trim()), textAlign: TextAlign.start, maxLines: 2, overflow: TextOverflow.ellipsis, style: primaryTextStyle()).paddingSymmetric(horizontal: 4),
             ],
@@ -100,7 +142,24 @@ class ItemWidgetState extends State<ItemWidget> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            cachedImage(widget.data.logo, fit: BoxFit.fill, width: 105, height: 140).cornerRadiusWithClipRRect(defaultRadius).paddingOnly(left: 4, right: 4),
+            Stack(
+              children: [
+                cachedImage(widget.data.logo, fit: BoxFit.fill, width: 105, height: 140).cornerRadiusWithClipRRect(defaultRadius).paddingOnly(left: 4, right: 4),
+                 if (widget.data.isPremium == '1')
+                    Positioned(
+                      top: 0,
+                      right: 4,
+                      child: Container(
+                         padding: EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: Colors.amber,
+                          shape: BoxShape.circle,
+                        ),
+                         child: Icon(Icons.diamond, color: Colors.white, size: 12),
+                      ),
+                    ),
+              ],
+            ),
             6.width,
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,

@@ -252,5 +252,25 @@ class LanguageTr extends BaseLanguage {
   @override String get lblChoosePhoto => "Fotoğraf Seç";
   @override String get lblCamera => "Kamera";
   @override String get lblGallery => "Galeri";
+  
+  // Offline Reading / Downloads
+  @override String get lblDownloads => "İndirilenler";
+  @override String get lblOfflineLibrary => "Çevrimdışı Kütüphane";
+  @override String get lblYouHave => "";
+  @override String get lblDownloadedBooks => "indirilmiş kitabınız var";
+  @override String get lblTapToStartReading => "Tıklayarak okumaya başlayın";
+  @override String get lblNoDownloadedBooks => "İndirilmiş kitap bulunamadı";
+  @override String get lblDownloadToReadOffline => "Çevrimdışı okumak için kitap indirin";
+  @override String get lblRemoveDownloadTitle => "İndirmeyi Kaldır?";
+  @override String get lblRemoveDownloadMsg => "Bu kitabı çevrimdışı depolama alanından kaldırmak istediğinizden emin misiniz?";
+  @override String get lblDeleteBookTitle => "Kitabı Sil?";
+  @override String get lblDeleteBookMsg => "Bu kitabı indirilenlerden kaldırmak istediğinizden emin misiniz?";
+  @override String get lblDownloadComplete => "İndirme Tamamlandı";
+  @override String get lblDownloadFailed => "İndirme Başarısız";
+  @override String get lblOfflineReadToast => "Çevrimdışı kütüphanenizden okumaya başlayın.";
+  @override String get lblErrorOpeningBook => "Kitap açılırken hata oluştu. Dosya bozuk olabilir.";
+  @override String get lblUnknownTitle => "Bilinmeyen Başlık";
+  @override String get lblDeviceResetByAdmin => "Cihazınız yönetici tarafından sıfırlandı.";
+  @override String get lblAccountSuspended => "Hesabınız askıya alınmıştır. Lütfen destek ile iletişime geçin.";
 }
 

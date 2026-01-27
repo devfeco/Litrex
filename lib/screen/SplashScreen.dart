@@ -14,6 +14,9 @@ import 'package:flutter/material.dart';
 import '../utils/Extensions/shared_pref.dart';
 import '../utils/Extensions/text_styles.dart';
 import '../utils/colors.dart';
+import '../utils/Extensions/Commons.dart';
+import '../utils/OfflineReadingService.dart';
+import '../network/AuthApis.dart';
 import 'DashboardScreen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -39,8 +42,47 @@ class SplashScreenState extends State<SplashScreen> {
     bool seen = (getBoolAsync('isFirstTime'));
     
     if (seen) {
-      // Kullanıcı daha önce uygulamayı görmüş
       if (authStore.isLoggedIn) {
+        // Yerel ban kontrolü (Hızlı kontrol)
+        if (authStore.currentUser?.status == 'banned') {
+          await authStore.logout();
+          toast(language.lblAccountSuspended);
+          LoginScreen().launch(context, isNewTask: true);
+          return;
+        }
+
+        // Cihaz ve Sunucu bazlı kontrol
+        try {
+          String? deviceId = await getDeviceId();
+          if (deviceId != null) {
+            final resetResponse = await checkDeviceReset(deviceId: deviceId);
+            log("API Response (checkDeviceReset): $resetResponse");
+            
+            // Ban kontrolü (Sunucudan gelen güncel durum)
+            if (resetResponse['user_status'] == 'banned' || resetResponse['status'] == 'banned' || (resetResponse['user'] != null && resetResponse['user']['status'] == 'banned')) {
+              log("User is banned based on API response.");
+              await authStore.logout();
+              toast(language.lblAccountSuspended);
+              LoginScreen().launch(context, isNewTask: true);
+              return;
+            }
+
+            // Sıfırlama kontrolü
+            if (resetResponse['status'] == 'reset') {
+              // Uygulamayı sıfırla
+              await OfflineReadingService().clearAllBooks();
+              await authStore.logout();
+              
+              toast(language.lblDeviceResetByAdmin ?? "Cihazınız yönetici tarafından sıfırlandı.");
+              
+              LoginScreen().launch(context, isNewTask: true);
+              return;
+            }
+          }
+        } catch (e) {
+          log("Reset check error: $e");
+        }
+
         // Giriş yapılmış, Dashboard'a git
         if (getStringListAsync(chooseTopicList) != null) {
           DashboardScreen().launch(context, isNewTask: true);

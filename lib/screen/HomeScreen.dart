@@ -31,6 +31,9 @@ import 'AuthorListScreen.dart';
 import 'BookDetailScreen.dart';
 import 'SearchScreen.dart';
 import 'PremiumScreen.dart';
+import 'DownloadScreen.dart';
+import '../component/NativeAdWidget.dart';
+import '../utils/OfflineReadingService.dart';
 
 class HomeScreen extends StatefulWidget {
   static String tag = '/HomeScreen';
@@ -52,6 +55,7 @@ class HomeScreenState extends State<HomeScreen> {
   int? currentIndex = 0;
   bool? isLoading = true;
   String? mErrorMsg = "";
+  int downloadCount = 0;
 
   PageController? pageController;
 
@@ -124,6 +128,11 @@ class HomeScreenState extends State<HomeScreen> {
     }).catchError((e) {
       isLoading = false;
       mErrorMsg = e.toString();
+      setState(() {});
+    });
+
+    OfflineReadingService().getDownloadedBooks().then((books) {
+      downloadCount = books.length;
       setState(() {});
     });
   }
@@ -249,8 +258,51 @@ class HomeScreenState extends State<HomeScreen> {
                         ),
                         dotIndicator(mSliderList, currentIndex)
                             .paddingTop(8),
+                        16.height,
                       ],
                     ),
+
+                  // Downloads Banner
+                  if (downloadCount > 0)
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: EdgeInsets.all(16),
+                      decoration: boxDecorationWithRoundedCornersWidget(
+                        backgroundColor: primaryColor.withOpacity(0.1),
+                        borderRadius: radius(12),
+                        border: Border.all(color: primaryColor.withOpacity(0.2)),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(8),
+                            decoration: BoxDecoration(color: primaryColor, shape: BoxShape.circle),
+                            child: Icon(Ionicons.cloud_download, color: Colors.white, size: 20),
+                          ),
+                          16.width,
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("${language.lblYouHave} $downloadCount ${language.lblDownloadedBooks}".trim(), style: boldTextStyle(size: 14)),
+                                Text(language.lblTapToStartReading, style: secondaryTextStyle(size: 12)),
+                              ],
+                            ),
+                          ),
+                          Icon(Icons.arrow_forward_ios, size: 16, color: primaryColor),
+                        ],
+                      ),
+                    ).onTap(() {
+                      DownloadScreen().launch(context).then((value) {
+                         // Refresh count when returning
+                         OfflineReadingService().getDownloadedBooks().then((books) {
+                            downloadCount = books.length;
+                            setState(() {});
+                         });
+                      });
+                    }),
+                  
+                  16.height,
 
                   // Latest
                   if (mLatestList.isNotEmpty)
@@ -316,6 +368,9 @@ class HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
 
+                  NativeAdWidget(),
+
+
                   // Popular
                   if (mPopularList.isNotEmpty)
                     Column(
@@ -369,8 +424,11 @@ class HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
 
+                  NativeAdWidget(),
+
                   // Suggested
                   if (mSuggestedList.isNotEmpty)
+
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

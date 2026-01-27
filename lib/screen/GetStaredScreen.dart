@@ -8,6 +8,9 @@ import '../utils/Extensions/text_styles.dart';
 import '../main.dart';
 import '../utils/Extensions/Commons.dart';
 import '../utils/Extensions/decorations.dart';
+import '../utils/Extensions/shared_pref.dart';
+import '../utils/constant.dart';
+import 'WebViewScreen.dart';
 import '../utils/colors.dart';
 import '../utils/images.dart';
 
@@ -124,6 +127,26 @@ class GetStaredScreenState extends State<GetStaredScreen> {
                   crossFadeState: selectedIndex == (pages.length - 1) ? CrossFadeState.showFirst : CrossFadeState.showSecond),
               bottom: 20,
               right: 20),
+          if (selectedIndex == (pages.length - 1))
+            Positioned(
+              bottom: 15,
+              left: 0,
+              right: 0,
+              child: GestureDetector(
+                onTap: () {
+                  if (getStringAsync(PRIVACY_POLICY_PREF).isNotEmpty) {
+                    WebViewScreen(title: language.lblPrivacyPolicy, mInitialUrl: getStringAsync(PRIVACY_POLICY_PREF)).launch(context);
+                  } else {
+                    toast(language.lblUrlEmpty);
+                  }
+                },
+                child: Text(
+                  language.lblPrivacyPolicy,
+                  textAlign: TextAlign.center,
+                  style: secondaryTextStyle(size: 11, decoration: TextDecoration.underline),
+                ),
+              ),
+            ),
           Positioned(
               child: AnimatedContainer(duration: Duration(seconds: 1), child: Text(language.lblSkip, style: boldTextStyle(color: primaryColor)), padding: EdgeInsets.fromLTRB(16, 8, 16, 8)).onTap(_onGetStarted),
               right: 8,
