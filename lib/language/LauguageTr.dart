@@ -272,5 +272,6 @@ class LanguageTr extends BaseLanguage {
   @override String get lblUnknownTitle => "Bilinmeyen Başlık";
   @override String get lblDeviceResetByAdmin => "Cihazınız yönetici tarafından sıfırlandı.";
   @override String get lblAccountSuspended => "Hesabınız askıya alınmıştır. Lütfen destek ile iletişime geçin.";
+  @override String get lblGetPremiumToRead => "Okumak İçin Premium Alın";
 }
 

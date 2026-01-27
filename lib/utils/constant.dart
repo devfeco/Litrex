@@ -4,8 +4,8 @@ const AppName = "Litrex eBook";
 
 /// Note: /api/ is required after your domain. Ex if your domain is www.abc.com then ${mBaseUrl} will be  https://www.abc.com/api/
 /// Note: Do not end base url with Slash (/)
-const mBaseUrl = 'http://192.168.0.50';
-const mDomainUrl = "$mBaseUrl/litrexadmin/api/";
+const mBaseUrl = 'https://litresfer.com';
+const mDomainUrl = "$mBaseUrl/api/";
 
 // Facebook
 const FACEBOOK_KEY = '';

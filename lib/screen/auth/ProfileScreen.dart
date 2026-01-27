@@ -249,27 +249,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                       style: primaryTextStyle(color: Colors.white70, size: 14),
                     ),
                     
-                    30.height,
-                    
-                    // Stats
-                    Container(
-                      margin: EdgeInsets.symmetric(horizontal: 24),
-                      padding: EdgeInsets.symmetric(vertical: 16),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.15),
-                        borderRadius: radius(16),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          _buildStatItem('0', language.lblBooksRead),
-                          Container(width: 1, height: 40, color: Colors.white30),
-                          _buildStatItem('${wishListStore.wishList.length}', language.lblBookmarks),
-                          Container(width: 1, height: 40, color: Colors.white30),
-                          _buildStatItem('0', language.lblFavorites),
-                        ],
-                      ),
-                    ),
+
                     
                     20.height,
 

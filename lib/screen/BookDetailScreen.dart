@@ -264,7 +264,7 @@ class BookDetailScreenState extends State<BookDetailScreen> {
 
               child: Text(
                 (widget.data.isPremium == '1' && !authStore.isPremiumUser) 
-                    ? "Get Premium to Read" 
+                    ? language.lblGetPremiumToRead 
                     : language.lblReadBook, 
                 style: boldTextStyle(size: 18, color: Colors.white), 
                 textAlign: TextAlign.center

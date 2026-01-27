@@ -272,4 +272,5 @@ class LanguageEn extends BaseLanguage {
   @override String get lblUnknownTitle => "Unknown Title";
   @override String get lblDeviceResetByAdmin => "Your device has been reset by the administrator.";
   @override String get lblAccountSuspended => "Your account has been suspended. Please contact support.";
+  @override String get lblGetPremiumToRead => "Get Premium to Read";
 }

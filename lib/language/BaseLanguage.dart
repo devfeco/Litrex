@@ -174,4 +174,5 @@ abstract class BaseLanguage {
   String get lblUnknownTitle;
   String get lblDeviceResetByAdmin;
   String get lblAccountSuspended;
+  String get lblGetPremiumToRead;
 }
