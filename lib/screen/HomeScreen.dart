@@ -35,6 +35,8 @@ import 'DownloadScreen.dart';
 import '../component/NativeAdWidget.dart';
 import '../utils/OfflineReadingService.dart';
 
+import 'dart:io';
+
 class HomeScreen extends StatefulWidget {
   static String tag = '/HomeScreen';
 
@@ -43,6 +45,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> {
+  // ... existing variables ...
   List<Category> mCategoryList = [];
   List<Book> mPopularList = [];
   List<Book> mLatestList = [];
@@ -70,8 +73,26 @@ class HomeScreenState extends State<HomeScreen> {
     init();
     _loadAdaptiveBanner();
   }
+  
+  String _getAdaptiveAdUnitId() {
+    String? adId;
+    if (Platform.isIOS) {
+        adId = getStringAsync(ADMOB_ADAPTIVE_BANNER_ID_IOS);
+    } else {
+        adId = getStringAsync(ADMOB_ADAPTIVE_BANNER_ID);
+    }
+
+    if (adId.validate().isNotEmpty) {
+      return adId!;
+    }
+    
+    // Default / Fallback ID
+    return 'ca-app-pub-2970306107465777/7229016697';
+  }
 
   Future<void> _loadAdaptiveBanner() async {
+    if (authStore.isPremiumUser) return;
+
     final AnchoredAdaptiveBannerAdSize? size =
     await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
       MediaQuery.of(context).size.width.truncate(),
@@ -80,7 +101,7 @@ class HomeScreenState extends State<HomeScreen> {
     if (size == null) return;
 
     _bannerAd = BannerAd(
-      adUnitId: 'ca-app-pub-2970306107465777/7229016697',
+      adUnitId: _getAdaptiveAdUnitId(),
       size: size,
       request: const AdRequest(),
       listener: BannerAdListener(

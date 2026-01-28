@@ -10,4 +10,22 @@ import Flutter
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
+
+  // iOS Screen Security Logic (App Switcher Obscuring)
+  private var secureField: UITextField?
+
+  override func applicationWillResignActive(_ application: UIApplication) {
+    if secureField == nil {
+        secureField = UITextField()
+        secureField?.isSecureTextEntry = true
+        self.window?.addSubview(secureField!)
+        self.window?.layer.superlayer?.addSublayer(secureField!.layer)
+        secureField?.layer.sublayers?.last?.addSublayer(self.window!.layer)
+    }
+  }
+
+  override func applicationDidBecomeActive(_ application: UIApplication) {
+    secureField?.removeFromSuperview()
+    secureField = nil
+  }
 }

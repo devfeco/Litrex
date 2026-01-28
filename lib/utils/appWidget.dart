@@ -106,6 +106,7 @@ InputDecoration inputDecoration(BuildContext context, {String? label, Widget? pr
 }
 
 void loadInterstitialAds() {
+  if (authStore.isPremiumUser) return;
   getStringAsync(ADD_TYPE) != NONE
       ? getStringAsync(ADD_TYPE) == isGoogleAds
           ? createInterstitialAd()
@@ -114,6 +115,7 @@ void loadInterstitialAds() {
 }
 
 void showInterstitialAds() {
+  if (authStore.isPremiumUser) return;
   getStringAsync(ADD_TYPE) != NONE
       ? getStringAsync(ADD_TYPE) == isGoogleAds
           ? adShow()
@@ -122,6 +124,7 @@ void showInterstitialAds() {
 }
 
 Widget showBannerAds() {
+  if (authStore.isPremiumUser) return SizedBox();
   return getStringAsync(ADD_TYPE) != NONE
       ? getStringAsync(ADD_TYPE) == isGoogleAds
           ? Container(

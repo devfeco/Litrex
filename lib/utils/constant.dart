@@ -33,6 +33,13 @@ const ADMOB_BANNER_ID = 'admob_banner_id';
 const ADMOB_INTERSTITIAL_ID = 'admob_interstitial_id';
 const ADMOB_BANNER_ID_IOS = 'admob_banner_id_ios';
 const ADMOB_INTERSTITIAL_ID_IOS = 'admob_interstitial_id_ios';
+const ADMOB_NATIVE_ID = 'admob_native_id';
+const ADMOB_NATIVE_ID_IOS = 'admob_native_id_ios';
+const ADMOB_ADAPTIVE_BANNER_ID = 'admob_adaptive_banner_id';
+const ADMOB_ADAPTIVE_BANNER_ID_IOS = 'admob_adaptive_banner_id_ios';
+
+const FACEBOOK_NATIVE_ID = 'facebook_native_id';
+const FACEBOOK_NATIVE_ID_IOS = 'facebook_native_id_ios';
 
 const INTERSTITIAL_ADS_INTERVAL = "interstitial_ads_interval";
 const BANNER_AD_BOOK_LIST = "banner_ad_book_list";

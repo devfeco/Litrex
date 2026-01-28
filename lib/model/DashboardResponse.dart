@@ -165,10 +165,18 @@ class Adsconfiguration {
   String? admobInterstitialId;
   String? admobBannerIdIos;
   String? admobInterstitialIdIos;
+  String? admobNativeId;
+  String? admobNativeIdIos;
+  String? admobAdaptiveBannerId;
+  String? admobAdaptiveBannerIdIos;
+  
   String? facebookBannerId;
   String? facebookInterstitialId;
   String? facebookBannerIdIos;
   String? facebookInterstitialIdIos;
+  String? facebookNativeId;
+  String? facebookNativeIdIos;
+  
   String? interstitialAdsInterval;
   String? bannerAdBookList;
   String? bannerAdCategoryList;
@@ -188,10 +196,16 @@ class Adsconfiguration {
         this.admobInterstitialId,
         this.admobBannerIdIos,
         this.admobInterstitialIdIos,
+        this.admobNativeId,
+        this.admobNativeIdIos,
+        this.admobAdaptiveBannerId,
+        this.admobAdaptiveBannerIdIos,
         this.facebookBannerId,
         this.facebookInterstitialId,
         this.facebookBannerIdIos,
         this.facebookInterstitialIdIos,
+        this.facebookNativeId,
+        this.facebookNativeIdIos,
         this.interstitialAdsInterval,
         this.bannerAdBookList,
         this.bannerAdCategoryList,
@@ -211,10 +225,18 @@ class Adsconfiguration {
     admobInterstitialId = json['admob_interstitial_id'];
     admobBannerIdIos = json['admob_banner_id_ios'];
     admobInterstitialIdIos = json['admob_interstitial_id_ios'];
+    admobNativeId = json['admob_native_id'];
+    admobNativeIdIos = json['admob_native_id_ios'];
+    admobAdaptiveBannerId = json['admob_adaptive_banner_id'];
+    admobAdaptiveBannerIdIos = json['admob_adaptive_banner_id_ios'];
+    
     facebookBannerId = json['facebook_banner_id'];
     facebookInterstitialId = json['facebook_interstitial_id'];
     facebookBannerIdIos = json['facebook_banner_id_ios'];
     facebookInterstitialIdIos = json['facebook_interstitial_id_ios'];
+    facebookNativeId = json['facebook_native_id'];
+    facebookNativeIdIos = json['facebook_native_id_ios'];
+    
     interstitialAdsInterval = json['interstitial_ads_interval'];
     bannerAdBookList = json['banner_ad_book_list'];
     bannerAdCategoryList = json['banner_ad_category_list'];
@@ -236,10 +258,18 @@ class Adsconfiguration {
     data['admob_interstitial_id'] = this.admobInterstitialId;
     data['admob_banner_id_ios'] = this.admobBannerIdIos;
     data['admob_interstitial_id_ios'] = this.admobInterstitialIdIos;
+    data['admob_native_id'] = this.admobNativeId;
+    data['admob_native_id_ios'] = this.admobNativeIdIos;
+    data['admob_adaptive_banner_id'] = this.admobAdaptiveBannerId;
+    data['admob_adaptive_banner_id_ios'] = this.admobAdaptiveBannerIdIos;
+    
     data['facebook_banner_id'] = this.facebookBannerId;
     data['facebook_interstitial_id'] = this.facebookInterstitialId;
     data['facebook_banner_id_ios'] = this.facebookBannerIdIos;
     data['facebook_interstitial_id_ios'] = this.facebookInterstitialIdIos;
+    data['facebook_native_id'] = this.facebookNativeId;
+    data['facebook_native_id_ios'] = this.facebookNativeIdIos;
+    
     data['interstitial_ads_interval'] = this.interstitialAdsInterval;
     data['banner_ad_book_list'] = this.bannerAdBookList;
     data['banner_ad_category_list'] = this.bannerAdCategoryList;

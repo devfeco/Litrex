@@ -38,7 +38,15 @@ Future<DashboardResponse> getDashboard() async {
       await setValue(ADMOB_BANNER_ID, res.adsconfiguration!.admobBannerId.validate());
       await setValue(ADMOB_INTERSTITIAL_ID, res.adsconfiguration!.admobInterstitialId.validate());
       await setValue(ADMOB_BANNER_ID_IOS, res.adsconfiguration!.admobBannerIdIos.validate());
-      await setValue(ADMOB_INTERSTITIAL_ID_IOS, res.adsconfiguration!.facebookInterstitialIdIos.validate());
+      await setValue(ADMOB_INTERSTITIAL_ID_IOS, res.adsconfiguration!.admobInterstitialIdIos.validate());
+      
+      await setValue(ADMOB_NATIVE_ID, res.adsconfiguration!.admobNativeId.validate());
+      await setValue(ADMOB_NATIVE_ID_IOS, res.adsconfiguration!.admobNativeIdIos.validate());
+      await setValue(ADMOB_ADAPTIVE_BANNER_ID, res.adsconfiguration!.admobAdaptiveBannerId.validate());
+      await setValue(ADMOB_ADAPTIVE_BANNER_ID_IOS, res.adsconfiguration!.admobAdaptiveBannerIdIos.validate());
+      
+      await setValue(FACEBOOK_NATIVE_ID, res.adsconfiguration!.facebookNativeId.validate());
+      await setValue(FACEBOOK_NATIVE_ID_IOS, res.adsconfiguration!.facebookNativeIdIos.validate());
 
       if (res.adsconfiguration!.interstitialAdsInterval.validate().isEmptyOrNull) {
         await setValue(INTERSTITIAL_ADS_INTERVAL, "1");
