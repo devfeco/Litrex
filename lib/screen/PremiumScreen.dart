@@ -32,7 +32,8 @@ class _PremiumScreenState extends State<PremiumScreen> with SingleTickerProvider
   String? _selectedProductId; // Track selected plan
 
   // Google Play Console Product IDs
-  final Set<String> _kIds = {'premium_monthly', 'premium_quarterly'};
+  // Google Play Console Product IDs
+  final Set<String> _kIds = {'premium_monthly', 'premium_quarterly', 'android.test.purchased'};
 
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
@@ -96,20 +97,22 @@ class _PremiumScreenState extends State<PremiumScreen> with SingleTickerProvider
 
   void _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) {
       purchaseDetailsList.forEach((PurchaseDetails purchaseDetails) async {
+        print("Purchase Update: ${purchaseDetails.status}");
         if (purchaseDetails.status == PurchaseStatus.pending) {
-          // Show pending UI
+          toast("İşlem bekleniyor...");
         } else {
           if (purchaseDetails.status == PurchaseStatus.error) {
+            print("Purchase Error Details: ${purchaseDetails.error}");
             toast("İşlem başarısız: ${purchaseDetails.error?.message}");
           } else if (purchaseDetails.status == PurchaseStatus.purchased ||
                      purchaseDetails.status == PurchaseStatus.restored) {
              
-             bool valid = await _verifyPurchase(purchaseDetails);
-             if (valid) {
+             String? error = await _verifyPurchase(purchaseDetails);
+             if (error == null) {
                toast("Premium aktif edildi! Keyfini çıkarın.");
                finish(context);
              } else {
-               toast("Doğrulama hatası.");
+               toast("Doğrulama hatası: $error");
              }
           }
           
@@ -120,7 +123,7 @@ class _PremiumScreenState extends State<PremiumScreen> with SingleTickerProvider
       });
   }
   
-  Future<bool> _verifyPurchase(PurchaseDetails purchaseDetails) async {
+  Future<String?> _verifyPurchase(PurchaseDetails purchaseDetails) async {
     try {
       // Backend'e doğrulama gönder
       final response = await updatePremiumStatus(
@@ -133,22 +136,36 @@ class _PremiumScreenState extends State<PremiumScreen> with SingleTickerProvider
       if (response.success == true && response.user != null) {
         // Başarılı ise store'u güncelle
         await authStore.setUser(response.user);
-        return true;
+        return null; // Başarılı, hata yok
       }
-      return false;
+      return response.message ?? "Sunucu doğrulama hatası: Bilinmeyen hata";
     } catch (e) {
       print("Premium Doğrulama Hatası: $e");
-      return false;
+      return "Bağlantı hatası: $e";
     }
   }
 
   void _buyProduct(ProductDetails prod) {
+    print("Initiating purchase for: ${prod.id}");
+    toast("Ödeme başlatılıyor: ${prod.id}..."); // Debug toast
+    
     final PurchaseParam purchaseParam = PurchaseParam(productDetails: prod);
-    _inAppPurchase.buyNonConsumable(purchaseParam: purchaseParam);
+    
+    try {
+      _inAppPurchase.buyNonConsumable(purchaseParam: purchaseParam);
+      print("buyNonConsumable called.");
+    } catch (e) {
+      print("Purchase Error: $e");
+      toast("Hata: $e");
+    }
   }
 
    void _handleMainButtonTap() {
-    if (_isLoading) return;
+    print("Button Tapped. Loading: $_isLoading, Available: $_isAvailable");
+    if (_isLoading) {
+      toast("Yükleniyor, lütfen bekleyin...");
+      return;
+    }
     if (!_isAvailable) {
       toast("Mağaza bağlantısı yok. Lütfen Google Play Store'a giriş yapın.");
       return;
@@ -167,11 +184,15 @@ class _PremiumScreenState extends State<PremiumScreen> with SingleTickerProvider
     }
     
     if (_selectedProductId != null) {
-        final prod = _products.firstWhere(
-           (p) => p.id == _selectedProductId, 
-           orElse: () => _products[0]
-        );
+        ProductDetails prod;
+        try {
+           prod = _products.firstWhere((p) => p.id == _selectedProductId);
+        } catch (e) {
+           prod = _products[0];
+        }
         _buyProduct(prod);
+    } else {
+         toast("Ürün seçilemedi.");
     }
   }
 
@@ -414,7 +435,12 @@ class _PremiumScreenState extends State<PremiumScreen> with SingleTickerProvider
     
     try {
        monthly = _products.firstWhere((p) => p.id.contains('monthly'));
-    } catch (e) {}
+    } catch (e) {
+      // Fallback for testing
+      try {
+        monthly = _products.firstWhere((p) => p.id == 'android.test.purchased');
+      } catch (e) {}
+    }
     
     try {
        quarterly = _products.firstWhere((p) => p.id.contains('quarterly') || p.id.contains('3_months'));
