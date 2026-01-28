@@ -37,11 +37,9 @@ class UserModel {
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
       isPremium: json['is_premium'] is String ? int.tryParse(json['is_premium']) : json['is_premium'],
-      status: json['status'],
+      status: json['status']?.toString(),
     );
-
   }
-
 
   Map<String, dynamic> toJson() {
     return {
@@ -56,7 +54,6 @@ class UserModel {
       'is_premium': isPremium,
       'status': status,
     };
-
   }
 }
 
@@ -78,7 +75,7 @@ class AuthResponse {
     
     // Eğer user objesi içinde status yoksa veya ana response'da farklı bir status varsa oradan al
     if (user != null && json['user_status'] != null) {
-      user.status = json['user_status'];
+      user.status = json['user_status']?.toString();
     }
     
     return AuthResponse(
