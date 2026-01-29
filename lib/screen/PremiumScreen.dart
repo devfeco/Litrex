@@ -110,21 +110,29 @@ class _PremiumScreenState extends State<PremiumScreen> with SingleTickerProvider
              String? error = await _verifyPurchase(purchaseDetails);
              if (error == null) {
                toast("Premium aktif edildi! Keyfini çıkarın.");
+               
+               // Only complete purchase if verification is successful
+               if (purchaseDetails.pendingCompletePurchase) {
+                 await _inAppPurchase.completePurchase(purchaseDetails);
+               }
+               
                finish(context);
              } else {
                toast("Doğrulama hatası: $error");
+               // Do NOT complete purchase if verification failed. 
+               // This ensures the user is eventually refunded if we can't verify, 
+               // or allows retrying on next app launch.
              }
           }
           
-          if (purchaseDetails.pendingCompletePurchase) {
-            await _inAppPurchase.completePurchase(purchaseDetails);
-          }
+          // Removed standard completePurchase block from here to prevent premature acknowledgement
         }
       });
   }
   
   Future<String?> _verifyPurchase(PurchaseDetails purchaseDetails) async {
     try {
+      print("Verifying purchase: ${purchaseDetails.productID}, Token: ${purchaseDetails.verificationData.serverVerificationData}");
       // Backend'e doğrulama gönder
       final response = await updatePremiumStatus(
         purchaseToken: purchaseDetails.verificationData.serverVerificationData, // Google Play için token
@@ -133,12 +141,14 @@ class _PremiumScreenState extends State<PremiumScreen> with SingleTickerProvider
         purchaseTime: purchaseDetails.transactionDate ?? '',
       );
       
-      if (response.success == true && response.user != null) {
-        // Başarılı ise store'u güncelle
-        await authStore.setUser(response.user);
+      if (response != null && response.success == true) {
+        // Başarılı ise store'u güncelle. Response.user null olabilir, kontrol et.
+        if (response.user != null) {
+            await authStore.setUser(response.user!);
+        }
         return null; // Başarılı, hata yok
       }
-      return response.message ?? "Sunucu doğrulama hatası: Bilinmeyen hata";
+      return response?.message ?? "Sunucu doğrulama hatası: Bilinmeyen hata";
     } catch (e) {
       print("Premium Doğrulama Hatası: $e");
       return "Bağlantı hatası: $e";

@@ -217,6 +217,7 @@ Future<AuthResponse> updatePremiumStatus({
       'product_id': productId,
       'order_id': orderId,
       'purchase_time': purchaseTime,
+      'type': Platform.isAndroid ? 'android' : 'ios',
     },
   );
   return AuthResponse.fromJson(await handleResponse(response));
