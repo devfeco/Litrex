@@ -83,6 +83,12 @@ class SplashScreenState extends State<SplashScreen> {
           log("Reset check error: $e");
         }
 
+        // Kontrol sonrası oturum kapanmış olabilir (409 Conflict vb.)
+        if (!authStore.isLoggedIn) {
+          LoginScreen().launch(context, isNewTask: true);
+          return;
+        }
+
         // Giriş yapılmış, Dashboard'a git
         if (getStringListAsync(chooseTopicList) != null) {
           DashboardScreen().launch(context, isNewTask: true);

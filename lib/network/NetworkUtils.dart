@@ -75,6 +75,12 @@ Future handleResponse(Response response) async {
     throw errorInternetNotAvailable;
   }
 
+  // 409 Conflict: Başka cihazda oturum açıldı
+  if (response.statusCode == 409) {
+    await authStore.forceLogout();
+    throw 'Oturumunuz başka bir cihazda açıldığı için sonlandırıldı.';
+  }
+
   if (response.statusCode.isSuccessful()) {
     return jsonDecode(response.body);
   } else {

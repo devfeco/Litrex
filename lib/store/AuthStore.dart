@@ -2,6 +2,7 @@ import 'package:mobx/mobx.dart';
 import '../model/UserModel.dart';
 import '../utils/Extensions/shared_pref.dart';
 import '../utils/constant.dart';
+import '../utils/OfflineReadingService.dart';
 
 part 'AuthStore.g.dart';
 
@@ -94,5 +95,17 @@ abstract class _AuthStore with Store {
     await setValue('IS_PREMIUM', 0);
     await setValue('STATUS', '');
 
+  }
+
+  @action
+  Future<void> forceLogout() async {
+    // İndirilen kitapları sil
+    try {
+      await OfflineReadingService().clearAllBooks();
+    } catch (e) {
+      print("Force logout error: $e");
+    }
+    
+    await logout();
   }
 }

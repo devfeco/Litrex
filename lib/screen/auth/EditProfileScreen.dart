@@ -111,11 +111,21 @@ class EditProfileScreenState extends State<EditProfileScreen>
       if (response.success == true && response.user != null) {
         await authStore.setUser(response.user);
         toast(language.lblAvatarUpdated);
+        // Başarılı yükleme sonrası local dosyayı temizleyip güncel user avatarının (network) kullanılmasını sağlayabiliriz.
+        // Ancak kullanıcı deneyimi açısından local resim kalabilir, sorun yok.
       } else {
         toast(response.message ?? language.lblSomethingWentWrong);
+        // Hata durumunda seçili resmi geri al
+        setState(() {
+          _selectedImage = null;
+        });
       }
     } catch (e) {
       toast(e.toString());
+      // Hata durumunda seçili resmi geri al
+      setState(() {
+        _selectedImage = null;
+      });
     } finally {
       setState(() => isImageLoading = false);
     }
