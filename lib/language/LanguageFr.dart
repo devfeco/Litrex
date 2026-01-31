@@ -266,5 +266,15 @@ class LanguageFr extends BaseLanguage {
   @override String get lblGetPremiumToRead => "Get Premium to Read";
   @override String get lblYouArePremium => "You are a Premium Member";
   @override String get lblPremiumDesc => "Enjoy your exclusive benefits";
+  
+  // Support Screen
+  @override String get lblSubject => "Subject";
+  @override String get lblEnterSubject => "Enter subject";
+  @override String get lblMessage => "Message";
+  @override String get lblEnterMessage => "Enter your message";
+  @override String get lblSend => "Send";
+  @override String get lblMessageSent => "Your message has been sent successfully.";
+  @override String get lblSending => "Sending...";
+  @override String get lblFailedToSend => "Failed to send message. Please try again.";
 }
 

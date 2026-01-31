@@ -177,4 +177,14 @@ abstract class BaseLanguage {
   String get lblGetPremiumToRead;
   String get lblYouArePremium;
   String get lblPremiumDesc;
+
+  // Support Screen
+  String get lblSubject;
+  String get lblEnterSubject;
+  String get lblMessage;
+  String get lblEnterMessage;
+  String get lblSend;
+  String get lblMessageSent;
+  String get lblSending;
+  String get lblFailedToSend;
 }

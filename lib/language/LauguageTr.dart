@@ -275,5 +275,15 @@ class LanguageTr extends BaseLanguage {
   @override String get lblGetPremiumToRead => "Okumak İçin Premium Alın";
   @override String get lblYouArePremium => "Premium Üyesiniz";
   @override String get lblPremiumDesc => "Sınırsız okumanın keyfini çıkarın";
+  
+  // Support Screen
+  @override String get lblSubject => "Konu";
+  @override String get lblEnterSubject => "Konuyu girin";
+  @override String get lblMessage => "Mesaj";
+  @override String get lblEnterMessage => "Mesajınızı girin";
+  @override String get lblSend => "Gönder";
+  @override String get lblMessageSent => "Mesajınız başarıyla gönderildi.";
+  @override String get lblSending => "Gönderiliyor...";
+  @override String get lblFailedToSend => "Mesaj gönderilemedi. Lütfen tekrar deneyin.";
 }
 

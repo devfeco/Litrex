@@ -156,3 +156,24 @@ Future<List<Book>> getAuthorBook(Map? request) async {
     rethrow;
   }
 }
+
+/// Destek mesajı gönder
+Future<Map<String, dynamic>> sendSupportMessage({
+  required String subject,
+  required String message,
+  String? email,
+  String? name,
+}) async {
+  final response = await buildHttpResponse(
+    'support/send_message.php',
+    method: HttpMethod.POST,
+    request: {
+      'subject': subject,
+      'message': message,
+      if (email != null) 'email': email,
+      if (name != null) 'name': name,
+    },
+  );
+  return await handleResponse(response);
+}
+

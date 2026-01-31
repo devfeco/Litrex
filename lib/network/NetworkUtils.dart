@@ -1,6 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/material.dart';
+import '../screen/auth/LoginScreen.dart';
 import '../main.dart';
+import '../utils/Extensions/Commons.dart';
+
 
 import '../utils/Extensions/int_extensions.dart';
 import '../utils/constant.dart';
@@ -78,6 +82,16 @@ Future handleResponse(Response response) async {
   // 409 Conflict: Başka cihazda oturum açıldı
   if (response.statusCode == 409) {
     await authStore.forceLogout();
+    
+    toast('Oturumunuz başka bir cihazda açıldığı için sonlandırıldı.');
+    
+    if (navigatorKey.currentState != null) {
+      navigatorKey.currentState!.pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => LoginScreen()),
+        (route) => false,
+      );
+    }
+    
     throw 'Oturumunuz başka bir cihazda açıldığı için sonlandırıldı.';
   }
 

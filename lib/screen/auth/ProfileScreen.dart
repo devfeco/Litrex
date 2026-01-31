@@ -18,6 +18,7 @@ import '../BookmarkScreen.dart';
 import 'EditProfileScreen.dart';
 import 'LoginScreen.dart';
 import '../PremiumScreen.dart';
+import '../HelpSupportScreen.dart';
 import '../DownloadScreen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -396,7 +397,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                     icon: Ionicons.help_circle_outline,
                     title: language.lblHelpSupport,
                     subtitle: language.lblGetHelp,
-                    onTap: () {},
+                    onTap: () => HelpSupportScreen().launch(context),
                   ),
 
                   // Hesabı Sil

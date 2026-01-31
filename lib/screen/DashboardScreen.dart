@@ -1,3 +1,4 @@
+import 'dart:async';
 import '../network/AuthApis.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
@@ -34,6 +35,8 @@ class DashboardScreenState extends State<DashboardScreen> {
     ProfileScreen(),
   ];
 
+  Timer? _sessionTimer;
+
   @override
   void initState() {
     super.initState();
@@ -53,12 +56,26 @@ class DashboardScreenState extends State<DashboardScreen> {
       });
     }
 
-    // Kullanıcı giriş yapmışsa profil bilgilerini güncelle (Premium durumu için önemli)
+    _startSessionCheck();
+  }
+  
+  void _startSessionCheck() {
+    // İlk kontrol
+    _checkSession();
+    
+    // Periyodik kontrol (her 10 saniyede bir)
+    _sessionTimer = Timer.periodic(Duration(seconds: 3), (timer) {
+      _checkSession();
+    });
+  }
+
+  void _checkSession() {
     if (authStore.isLoggedIn) {
       getProfile().then((value) {
         authStore.setUser(value);
       }).catchError((e) {
-        print("Profil senkronizasyon hatası: $e");
+        // Hata durumunda (409 değilse) sessiz kal, 409 ise NetworkUtils hallediyor
+        print("Session check error: $e");
       });
     }
   }
@@ -66,6 +83,12 @@ class DashboardScreenState extends State<DashboardScreen> {
   @override
   void setState(fn) {
     if (mounted) super.setState(fn);
+  }
+  
+  @override
+  void dispose() {
+    _sessionTimer?.cancel();
+    super.dispose();
   }
 
   Widget mLine() {
@@ -79,7 +102,6 @@ class DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: tab[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -105,3 +127,4 @@ class DashboardScreenState extends State<DashboardScreen> {
     );
   }
 }
+
