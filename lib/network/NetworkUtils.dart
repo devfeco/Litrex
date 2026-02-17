@@ -15,8 +15,9 @@ import '../utils/Extensions/Constants.dart';
 import '../utils/Extensions/Widget_extensions.dart';
 import '../utils/Extensions/network_utils.dart';
 import '../utils/Extensions/string_extensions.dart';
+import '../utils/Extensions/shared_pref.dart';
 
-Map<String, String> buildHeaderTokens() {
+Map<String, String> buildHeaderTokens({String? endPoint}) {
   Map<String, String> header = {
     HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8',
     HttpHeaders.cacheControlHeader: 'no-cache',
@@ -25,11 +26,33 @@ Map<String, String> buildHeaderTokens() {
     'Access-Control-Allow-Origin': '*',
   };
 
-  if (authStore.authToken.validate().isNotEmpty) {
-    header.putIfAbsent(HttpHeaders.authorizationHeader, () => 'Bearer ${authStore.authToken}');
+  // Auth ile ilgili uç noktaların listesi
+  List<String> authEndpoints = [
+    'auth/login.php',
+    'auth/register.php',
+    'auth/google_login.php',
+    'auth/forgot_password.php',
+    'auth/reset_password.php',
+    'auth/send_verification.php',
+    'auth/verify_email.php',
+    'auth/check_reset.php'
+  ];
+
+  // Eğer istek bir auth uç noktasına değilse token ekle
+  bool isAuthRequest = endPoint != null && authEndpoints.any((element) => endPoint.contains(element));
+
+  if (!isAuthRequest) {
+    // Token yüklenmemişse ama oturum açıksa prefs'ten çekmeyi dene
+    if (authStore.authToken.validate().isEmpty && authStore.isLoggedIn) {
+      authStore.authToken = getStringAsync(AUTH_TOKEN);
+    }
+
+    if (authStore.authToken.validate().isNotEmpty) {
+      header.putIfAbsent(HttpHeaders.authorizationHeader, () => 'Bearer ${authStore.authToken}');
+    }
   }
 
-  log(jsonEncode(header));
+  log("Request Headers (Endpoint: $endPoint): ${jsonEncode(header)}");
   return header;
 }
 
@@ -44,7 +67,7 @@ Uri buildBaseUrl(String endPoint) {
 
 Future<Response> buildHttpResponse(String endPoint, {HttpMethod method = HttpMethod.GET, Map? request}) async {
   if (await isNetworkAvailable()) {
-    var headers = buildHeaderTokens();
+    var headers = buildHeaderTokens(endPoint: endPoint);
     Uri url = buildBaseUrl(endPoint);
 
     Response response;

@@ -98,36 +98,50 @@ class _PremiumScreenState extends State<PremiumScreen> with SingleTickerProvider
   void _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) {
       purchaseDetailsList.forEach((PurchaseDetails purchaseDetails) async {
         print("Purchase Update: ${purchaseDetails.status}");
+        
         if (purchaseDetails.status == PurchaseStatus.pending) {
           toast("İşlem bekleniyor...");
-        } else {
-          if (purchaseDetails.status == PurchaseStatus.error) {
-            print("Purchase Error Details: ${purchaseDetails.error}");
-            toast("İşlem başarısız: ${purchaseDetails.error?.message}");
-          } else if (purchaseDetails.status == PurchaseStatus.purchased ||
-                     purchaseDetails.status == PurchaseStatus.restored) {
+        } else if (purchaseDetails.status == PurchaseStatus.error) {
+           print("Purchase Error Details: ${purchaseDetails.error}");
+           toast("İşlem başarısız: ${purchaseDetails.error?.message}");
+        } else if (purchaseDetails.status == PurchaseStatus.purchased ||
+                   purchaseDetails.status == PurchaseStatus.restored) {
+           
+           setState(() => _isLoading = true);
+           String? error = await _verifyPurchase(purchaseDetails);
+           setState(() => _isLoading = false);
+           
+           if (error == null) {
+             toast("Premium aktif edildi! Keyfini çıkarın.");
              
-             String? error = await _verifyPurchase(purchaseDetails);
-             if (error == null) {
-               toast("Premium aktif edildi! Keyfini çıkarın.");
-               
-               // Only complete purchase if verification is successful
-               if (purchaseDetails.pendingCompletePurchase) {
-                 await _inAppPurchase.completePurchase(purchaseDetails);
-               }
-               
-               finish(context);
-             } else {
-               toast("Doğrulama hatası: $error");
-               // Do NOT complete purchase if verification failed. 
-               // This ensures the user is eventually refunded if we can't verify, 
-               // or allows retrying on next app launch.
+             if (purchaseDetails.pendingCompletePurchase) {
+               await _inAppPurchase.completePurchase(purchaseDetails);
              }
-          }
-          
-          // Removed standard completePurchase block from here to prevent premature acknowledgement
+             
+             finish(context);
+           } else {
+             toast("Doğrulama hatası: $error");
+             // Hata durumunda completePurchase yapmıyoruz, böylece tekrar denenebilir.
+           }
+        } else if (purchaseDetails.status == PurchaseStatus.canceled) {
+           toast("İşlem iptal edildi.");
         }
       });
+  }
+
+  Future<void> _restorePurchases() async {
+    setState(() => _isLoading = true);
+    try {
+      await _inAppPurchase.restorePurchases();
+      toast("Abonelik geçmişi kontrol ediliyor...");
+    } catch (e) {
+      toast("Geri yükleme hatası: $e");
+    } finally {
+      // Stream listener results will handle the rest
+      Future.delayed(Duration(seconds: 3), () {
+        if (mounted) setState(() => _isLoading = false);
+      });
+    }
   }
   
   Future<String?> _verifyPurchase(PurchaseDetails purchaseDetails) async {
@@ -386,6 +400,14 @@ class _PremiumScreenState extends State<PremiumScreen> with SingleTickerProvider
                        Text(
                          "İstediğin zaman iptal edebilirsin.",
                          style: secondaryTextStyle(color: Colors.white38, size: 12),
+                       ),
+                       12.height,
+                       TextButton(
+                         onPressed: _isLoading ? null : _restorePurchases,
+                         child: Text(
+                           "Satın Alımları Geri Yükle",
+                           style: secondaryTextStyle(color: Colors.amber.withOpacity(0.8), decoration: TextDecoration.underline),
+                         ),
                        ),
                     ],
                   ),

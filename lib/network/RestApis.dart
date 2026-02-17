@@ -104,7 +104,7 @@ Future<List<Book>> getFilterBooks(
       multiPartRequest.fields['category_ids'] = list.join(",");
     }
 
-    multiPartRequest.headers.addAll(buildHeaderTokens());
+    multiPartRequest.headers.addAll(buildHeaderTokens(endPoint: 'book.php'));
 
     final streamedResponse = await multiPartRequest.send();
     final response = await Response.fromStream(streamedResponse);

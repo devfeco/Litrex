@@ -116,7 +116,7 @@ Future<AuthResponse> updateAvatar({
     Uri.parse('${mDomainUrl}auth/update_avatar.php'),
   );
 
-  request.headers.addAll(buildHeaderTokens());
+  request.headers.addAll(buildHeaderTokens(endPoint: 'auth/update_avatar.php'));
   request.files.add(await MultipartFile.fromPath('avatar', imageFile.path));
 
   final streamedResponse = await request.send();
