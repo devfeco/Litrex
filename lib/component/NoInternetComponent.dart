@@ -7,6 +7,8 @@ import '../main.dart';
 import '../utils/Extensions/text_styles.dart';
 
 class NoInternetComponent extends StatelessWidget {
+  const NoInternetComponent({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Column(

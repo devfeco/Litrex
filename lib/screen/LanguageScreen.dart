@@ -14,6 +14,8 @@ import '../main.dart';
 import '../utils/colors.dart';
 
 class LanguageScreen extends StatefulWidget {
+  const LanguageScreen({super.key});
+
   @override
   _LanguageScreenState createState() => _LanguageScreenState();
 }
@@ -54,7 +56,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
                 children: [
                   Image.asset(data.flag.validate(), width: 34),
                   16.width,
-                  Text('${data.name.validate()}',
+                  Text(data.name.validate(),
                           style: boldTextStyle(color: getStringAsync(SELECTED_LANGUAGE_CODE, defaultValue: DEFAULT_LANGUAGE) == data.languageCode.validate() ? Colors.white : textPrimaryColorGlobal))
                       .expand(),
                   getStringAsync(SELECTED_LANGUAGE_CODE, defaultValue: DEFAULT_LANGUAGE) == data.languageCode.validate()

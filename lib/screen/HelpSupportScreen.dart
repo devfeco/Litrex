@@ -14,6 +14,8 @@ import '../utils/Extensions/context_extensions.dart';
 class HelpSupportScreen extends StatefulWidget {
   static String tag = '/HelpSupportScreen';
 
+  const HelpSupportScreen({super.key});
+
   @override
   HelpSupportScreenState createState() => HelpSupportScreenState();
 }
@@ -66,7 +68,7 @@ class HelpSupportScreenState extends State<HelpSupportScreen> {
         showBack: true,
         elevation: 0,
       ),
-      body: Container(
+      body: SizedBox(
         height: context.height(),
         child: Stack(
           children: [

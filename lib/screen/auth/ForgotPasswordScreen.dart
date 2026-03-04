@@ -4,16 +4,16 @@ import '../../network/AuthApis.dart';
 import '../../utils/Extensions/AppButton.dart';
 import '../../utils/Extensions/AppTextField.dart';
 import '../../utils/Extensions/Commons.dart';
-import '../../utils/Extensions/Widget_extensions.dart';
 import '../../utils/Extensions/context_extensions.dart';
 import '../../utils/Extensions/decorations.dart';
 import '../../utils/Extensions/int_extensions.dart';
 import '../../utils/Extensions/text_styles.dart';
 import '../../utils/colors.dart';
-import '../../utils/images.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   static String tag = '/ForgotPasswordScreen';
+
+  const ForgotPasswordScreen({super.key});
 
   @override
   ForgotPasswordScreenState createState() => ForgotPasswordScreenState();
@@ -343,6 +343,7 @@ class ForgotPasswordScreenState extends State<ForgotPasswordScreen>
           height: 56,
           color: primaryColor,
           shapeBorder: RoundedRectangleBorder(borderRadius: radius(16)),
+          onTap: isLoading ? null : handleSendCode,
           child: isLoading
               ? _loadingIndicator()
               : Row(
@@ -356,7 +357,6 @@ class ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                     ),
                   ],
                 ),
-          onTap: isLoading ? null : handleSendCode,
         ),
       ],
     );
@@ -423,6 +423,7 @@ class ForgotPasswordScreenState extends State<ForgotPasswordScreen>
           height: 56,
           color: primaryColor,
           shapeBorder: RoundedRectangleBorder(borderRadius: radius(16)),
+          onTap: handleVerifyCode,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -434,7 +435,6 @@ class ForgotPasswordScreenState extends State<ForgotPasswordScreen>
               ),
             ],
           ),
-          onTap: handleVerifyCode,
         ),
       ],
     );
@@ -512,6 +512,7 @@ class ForgotPasswordScreenState extends State<ForgotPasswordScreen>
           height: 56,
           color: primaryColor,
           shapeBorder: RoundedRectangleBorder(borderRadius: radius(16)),
+          onTap: isLoading ? null : handleResetPassword,
           child: isLoading
               ? _loadingIndicator()
               : Row(
@@ -525,7 +526,6 @@ class ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                     ),
                   ],
                 ),
-          onTap: isLoading ? null : handleResetPassword,
         ),
       ],
     );

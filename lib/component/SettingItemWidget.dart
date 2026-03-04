@@ -25,7 +25,7 @@ class SettingItemWidget extends StatelessWidget {
   final double? borderRadius;
   final BorderRadius? radius;
 
-  SettingItemWidget({
+  const SettingItemWidget({super.key, 
     required this.title,
     this.onTap,
     this.width,

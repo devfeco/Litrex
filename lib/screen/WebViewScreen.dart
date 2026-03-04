@@ -8,7 +8,6 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:store_redirect/store_redirect.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import '../utils/Extensions/Widget_extensions.dart';
-import '../utils/Extensions/text_styles.dart';
 import '../utils/colors.dart';
 
 class WebViewScreen extends StatefulWidget {
@@ -17,7 +16,7 @@ class WebViewScreen extends StatefulWidget {
   final bool isAdsLoad;
   final String title;
 
-  WebViewScreen({this.mInitialUrl,required this.title, this.isAdsLoad = false});
+  const WebViewScreen({super.key, this.mInitialUrl,required this.title, this.isAdsLoad = false});
 
   @override
   WebViewScreenState createState() => WebViewScreenState();
@@ -48,7 +47,7 @@ class WebViewScreenState extends State<WebViewScreen> {
     init();
   }
 
-  init() async {
+  Future<void> init() async {
     if (wishListStore.isNetworkAvailable) {
       isLoading = false;
     } else {
@@ -82,7 +81,7 @@ class WebViewScreenState extends State<WebViewScreen> {
                   shouldOverrideUrlLoading: (controller, navigationAction) async {
                     var uri = navigationAction.request.url;
                     var url = navigationAction.request.url.toString();
-                    log("URL" + url.toString());
+                    log("URL$url");
 
                     if (Platform.isAndroid && url.contains("intent")) {
                       if (url.contains("maps")) {

@@ -7,6 +7,7 @@ class OfflineBook {
   final String? bookImage;
   final String? isPremium;
   final String? fileType; // 'pdf' or 'epub' (if supported) or 'file'
+  final String? unlockExpiry;
 
   OfflineBook({
     required this.id,
@@ -17,6 +18,7 @@ class OfflineBook {
     this.bookImage,
     this.isPremium,
     this.fileType,
+    this.unlockExpiry,
   });
 
   factory OfflineBook.fromJson(Map<String, dynamic> json) {
@@ -29,6 +31,7 @@ class OfflineBook {
       bookImage: json['book_image'],
       isPremium: json['is_premium'],
       fileType: json['file_type'],
+      unlockExpiry: json['unlock_expiry'],
     );
   }
 
@@ -42,6 +45,7 @@ class OfflineBook {
       'book_image': bookImage,
       'is_premium': isPremium,
       'file_type': fileType,
+      'unlock_expiry': unlockExpiry,
     };
   }
 }

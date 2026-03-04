@@ -101,6 +101,22 @@ Future handleResponse(Response response) async {
   if (!await isNetworkAvailable()) {
     throw errorInternetNotAvailable;
   }
+  
+
+  // 401 Unauthorized: Token süresi dolmuş veya geçersiz
+  if (response.statusCode == 401) {
+    await authStore.forceLogout();
+    toast('Oturumunuzun süresi dolduğu için tekrar giriş yapmanız gerekiyor.');
+    
+    if (navigatorKey.currentState != null) {
+      navigatorKey.currentState!.pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => LoginScreen()),
+        (route) => false,
+      );
+    }
+    
+    throw 'Oturumunuzun süresi dolduğu için tekrar giriş yapmanız gerekiyor.';
+  }
 
   // 409 Conflict: Başka cihazda oturum açıldı
   if (response.statusCode == 409) {
@@ -138,6 +154,7 @@ class TokenException implements Exception {
 
   const TokenException([this.message = ""]);
 
+  @override
   String toString() => "FormatException: $message";
 }
 //endregion

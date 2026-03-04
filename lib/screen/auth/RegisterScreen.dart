@@ -5,16 +5,12 @@ import 'package:flutter/gestures.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../../main.dart';
 
-import '../../model/UserModel.dart';
 import '../../network/AuthApis.dart';
-import '../../utils/Extensions/AppButton.dart';
 import '../../utils/Extensions/AppTextField.dart';
 import '../../utils/Extensions/Commons.dart';
 import '../../utils/Extensions/Widget_extensions.dart';
 import '../../utils/Extensions/context_extensions.dart';
 import '../../utils/Extensions/decorations.dart';
-import '../../utils/Extensions/int_extensions.dart';
-import '../../utils/Extensions/string_extensions.dart';
 import '../../utils/Extensions/text_styles.dart';
 import '../../utils/Extensions/shared_pref.dart';
 import '../../utils/colors.dart';
@@ -23,10 +19,11 @@ import '../../utils/images.dart';
 import '../ChooseTopicScreen.dart';
 import '../DashboardScreen.dart';
 import '../WebViewScreen.dart';
-import 'LoginScreen.dart';
 
 class RegisterScreen extends StatefulWidget {
   static String tag = '/RegisterScreen';
+
+  const RegisterScreen({super.key});
 
   @override
   RegisterScreenState createState() => RegisterScreenState();

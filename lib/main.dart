@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ui';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -26,7 +27,6 @@ import 'language/AppLocalizations.dart';
 import 'language/BaseLanguage.dart';
 import 'model/DashboardResponse.dart';
 import 'model/LanguageDataModel.dart';
-import 'screen/NoInternetScreen.dart';
 import 'screen/SplashScreen.dart';
 
 AppStore appStore = AppStore();
@@ -111,7 +111,7 @@ void oneSignalData() {
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();

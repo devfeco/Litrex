@@ -17,6 +17,8 @@ import '../component/NativeAdWidget.dart';
 
 
 class SearchScreen extends StatefulWidget {
+  const SearchScreen({super.key});
+
   @override
   _SearchScreenState createState() => _SearchScreenState();
 }
@@ -43,7 +45,7 @@ class _SearchScreenState extends State<SearchScreen> {
     getAPI(data: searchCont.text);
   }
 
-  scrollHandler() {
+  void scrollHandler() {
     if (scrollController.position.pixels == scrollController.position.maxScrollExtent && !appStore.isLoading) {
       currentPage++;
       appStore.setLoading(true);
@@ -51,7 +53,7 @@ class _SearchScreenState extends State<SearchScreen> {
     }
   }
 
-  loadData(List<Book> value) {
+  void loadData(List<Book> value) {
     if (!mounted) return;
     setState(() {
       appStore.setLoading(false);
@@ -66,7 +68,7 @@ class _SearchScreenState extends State<SearchScreen> {
     });
   }
 
-  catchData() {}
+  void catchData() {}
 
   Future getAPI({String? data}) {
     return getFilterBooks(searchText: data, page: currentPage).then((value) {

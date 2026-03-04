@@ -21,7 +21,7 @@ class ItemWidget extends StatefulWidget {
   final bool? isFeatured;
   final Book data;
 
-  ItemWidget(this.data, {this.onTap, this.isFavourite = false, this.isGrid = false, this.isFeatured = false});
+  const ItemWidget(this.data, {super.key, this.onTap, this.isFavourite = false, this.isGrid = false, this.isFeatured = false});
 
   @override
   ItemWidgetState createState() => ItemWidgetState();
@@ -34,7 +34,7 @@ class ItemWidgetState extends State<ItemWidget> {
     init();
   }
 
-  init() async {
+  Future<void> init() async {
     //
   }
 

@@ -16,7 +16,7 @@ class Loader extends StatefulWidget {
   final double? value;
   final Animation<Color?>? valueColor;
 
-  Loader({
+  const Loader({super.key, 
     this.color,
     this.decoration,
     this.size,
@@ -36,7 +36,7 @@ class LoaderState extends State<Loader> {
     init();
   }
 
-  init() async {
+  Future<void> init() async {
     //
   }
 

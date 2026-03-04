@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../screen/ChooseTopicScreen.dart';
 import '../screen/auth/LoginScreen.dart';
 import '../utils/Extensions/Widget_extensions.dart';
 import '../utils/Extensions/context_extensions.dart';
@@ -17,6 +16,8 @@ import '../utils/images.dart';
 class GetStaredScreen extends StatefulWidget {
   static String tag = '/GetStaredScreen';
 
+  const GetStaredScreen({super.key});
+
   @override
   GetStaredScreenState createState() => GetStaredScreenState();
 }
@@ -25,14 +26,14 @@ class GetStaredScreenState extends State<GetStaredScreen> {
   List<Widget> pages = [];
   var selectedIndex = 0;
 
-  PageController _pageController = PageController();
+  final PageController _pageController = PageController();
 
   @override
   void initState() {
     super.initState();
   }
 
-  init() async {
+  Future<void> init() async {
     pages = [
       Container(
         alignment: Alignment.center,
@@ -103,30 +104,30 @@ class GetStaredScreenState extends State<GetStaredScreen> {
       body: Stack(
         children: [
           PageView(
-              children: pages,
               controller: _pageController,
               onPageChanged: (index) {
                 selectedIndex = index;
                 setState(() {});
-              }),
+              },
+              children: pages),
           AnimatedPositioned(duration: Duration(seconds: 1), bottom: 70, left: 0, right: 0, child: dotIndicator(pages, selectedIndex)),
           Positioned(
+              bottom: 20,
+              right: 20,
               child: AnimatedCrossFade(
                   firstChild: Container(
-                    child: Text(language.lblGetStarted, style: boldTextStyle(color: Colors.white)),
                     padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
                     decoration: BoxDecoration(
                       color: primaryColor,
                       borderRadius: radius(8),
                     ),
+                    child: Text(language.lblGetStarted, style: boldTextStyle(color: Colors.white)),
                   ).onTap(_onGetStarted),
                   secondChild: SizedBox(),
                   duration: Duration(milliseconds: 300),
                   firstCurve: Curves.easeIn,
                   secondCurve: Curves.easeOut,
-                  crossFadeState: selectedIndex == (pages.length - 1) ? CrossFadeState.showFirst : CrossFadeState.showSecond),
-              bottom: 20,
-              right: 20),
+                  crossFadeState: selectedIndex == (pages.length - 1) ? CrossFadeState.showFirst : CrossFadeState.showSecond)),
           if (selectedIndex == (pages.length - 1))
             Positioned(
               bottom: 15,
@@ -148,9 +149,9 @@ class GetStaredScreenState extends State<GetStaredScreen> {
               ),
             ),
           Positioned(
-              child: AnimatedContainer(duration: Duration(seconds: 1), child: Text(language.lblSkip, style: boldTextStyle(color: primaryColor)), padding: EdgeInsets.fromLTRB(16, 8, 16, 8)).onTap(_onGetStarted),
               right: 8,
-              top: context.statusBarHeight + 8)
+              top: context.statusBarHeight + 8,
+              child: AnimatedContainer(duration: Duration(seconds: 1), padding: EdgeInsets.fromLTRB(16, 8, 16, 8), child: Text(language.lblSkip, style: boldTextStyle(color: primaryColor))).onTap(_onGetStarted))
         ],
       ),
     );

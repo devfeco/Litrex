@@ -29,7 +29,7 @@ class SettingScreen extends StatefulWidget {
   static String tag = '/SettingScreen';
   final Function onTap;
 
-  const SettingScreen({required this.onTap});
+  const SettingScreen({super.key, required this.onTap});
 
   @override
   SettingScreenState createState() => SettingScreenState();
@@ -42,7 +42,7 @@ class SettingScreenState extends State<SettingScreen> {
     init();
   }
 
-  init() async {
+  Future<void> init() async {
     FacebookAudienceNetwork.init(testingId: FACEBOOK_KEY, iOSAdvertiserTrackingEnabled: true);
   }
 
@@ -126,7 +126,7 @@ class SettingScreenState extends State<SettingScreen> {
               trailing: Transform.scale(
                 scale: 0.8,
                 child: CupertinoSwitch(
-                  activeColor: primaryColor,
+                  activeTrackColor: primaryColor,
                   value: appStore.isNotificationOn,
                   onChanged: (v) {
                     appStore.setNotification(v);
@@ -160,20 +160,22 @@ class SettingScreenState extends State<SettingScreen> {
               title: language.lblPrivacyPolicy,
               trailing: mTailingIcon(),
               onTap: () {
-                if (getStringAsync(PRIVACY_POLICY_PREF).isNotEmpty)
+                if (getStringAsync(PRIVACY_POLICY_PREF).isNotEmpty) {
                   WebViewScreen(title:language.lblPrivacyPolicy,mInitialUrl: getStringAsync(PRIVACY_POLICY_PREF)).launch(context);
-                else
+                } else {
                   toast(language.lblUrlEmpty);
+                }
               },
             ).visible(!getStringAsync(PRIVACY_POLICY_PREF).isEmptyOrNull),
             SettingItemWidget(
               title: language.lblTermsCondition,
               trailing: mTailingIcon(),
               onTap: () async {
-                if (getStringAsync(TERMS_AND_CONDITION_PREF).isNotEmpty)
+                if (getStringAsync(TERMS_AND_CONDITION_PREF).isNotEmpty) {
                   WebViewScreen(title:language.lblTermsCondition ,mInitialUrl: getStringAsync(TERMS_AND_CONDITION_PREF)).launch(context);
-                else
+                } else {
                   toast(language.lblUrlEmpty);
+                }
               },
             ).visible(!getStringAsync(TERMS_AND_CONDITION_PREF).isEmptyOrNull),
             SettingItemWidget(

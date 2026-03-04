@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../component/NoInternetComponent.dart';
 
 class NoInternetScreen extends StatefulWidget {
+  const NoInternetScreen({super.key});
+
   @override
   _NoInternetScreenState createState() => _NoInternetScreenState();
 }

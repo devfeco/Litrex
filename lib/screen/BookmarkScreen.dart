@@ -19,6 +19,8 @@ import 'BookDetailScreen.dart';
 class BookmarkScreen extends StatefulWidget {
   static String tag = '/FavouriteScreen';
 
+  const BookmarkScreen({super.key});
+
   @override
   BookmarkScreenState createState() => BookmarkScreenState();
 }
@@ -32,7 +34,7 @@ class BookmarkScreenState extends State<BookmarkScreen> {
     init();
   }
 
-  init() async {
+  Future<void> init() async {
     //
     mList = wishListStore.wishList;
   }
@@ -47,15 +49,15 @@ class BookmarkScreenState extends State<BookmarkScreen> {
       decoration: boxDecorationWithRoundedCornersWidget(backgroundColor: primaryColor.withOpacity(0.2), borderRadius: BorderRadius.only(topLeft: Radius.circular(defaultRadius), bottomLeft: Radius.circular(defaultRadius))),
       margin: EdgeInsets.only(bottom: 16),
       child: Align(
+        alignment: Alignment.centerRight,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             20.width,
             Icon(Icons.delete, color: Colors.white),
-            Text(" " + language.lblRemove, style: primaryTextStyle(size: 18, color: Colors.white), textAlign: TextAlign.right),
+            Text(" ${language.lblRemove}", style: primaryTextStyle(size: 18, color: Colors.white), textAlign: TextAlign.right),
           ],
         ),
-        alignment: Alignment.centerRight,
       ),
     );
   }
@@ -84,8 +86,8 @@ class BookmarkScreenState extends State<BookmarkScreen> {
                               finish(context);
                             }, onCall: () {
                               wishListStore.addToWishList(wishListStore.wishList[i]);
-                              finish(context);
-                            });
+                              finish(context, true);
+                            }).then((value) => value as bool?);
                           } else {
                             return null;
                           }

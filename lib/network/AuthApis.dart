@@ -5,7 +5,6 @@ import '../main.dart';
 import '../model/UserModel.dart';
 import '../network/NetworkUtils.dart';
 import '../utils/constant.dart';
-import '../utils/Extensions/string_extensions.dart';
 
 /// Kullanıcı Girişi
 Future<AuthResponse> loginUser({

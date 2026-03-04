@@ -12,10 +12,11 @@ import '../utils/appWidget.dart';
 import '../utils/colors.dart';
 import '../utils/constant.dart';
 import '../utils/Extensions/AppTextField.dart';
-import '../utils/Extensions/decorations.dart';
 
 class AuthorListScreen extends StatefulWidget {
   static String tag = '/AuthorListScreen';
+
+  const AuthorListScreen({super.key});
 
   @override
   AuthorListScreenState createState() => AuthorListScreenState();

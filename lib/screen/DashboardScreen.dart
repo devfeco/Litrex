@@ -5,6 +5,7 @@ import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import '../component/PDFViewerComponent.dart';
 import '../utils/Extensions/Widget_extensions.dart';
 import '../utils/Extensions/string_extensions.dart';
+import '../utils/Extensions/int_extensions.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import '../screen/BookmarkScreen.dart';
 import '../utils/Extensions/context_extensions.dart';
@@ -12,14 +13,21 @@ import '../utils/Extensions/device_extensions.dart';
 import '../utils/colors.dart';
 import '../utils/Extensions/decorations.dart';
 import '../utils/Extensions/text_styles.dart';
+import '../component/AdMobComponent.dart';
+import '../network/RestApis.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'CategoryScreen.dart';
 import 'HomeScreen.dart';
 import 'auth/ProfileScreen.dart';
 import 'WebViewScreen.dart';
 import '../main.dart'; // Ensure main is imported for authStore
+import '../utils/Extensions/Commons.dart';
+
 
 class DashboardScreen extends StatefulWidget {
   static String tag = '/DashboardScreen';
+
+  const DashboardScreen({super.key});
 
   @override
   DashboardScreenState createState() => DashboardScreenState();
@@ -43,7 +51,7 @@ class DashboardScreenState extends State<DashboardScreen> {
     init();
   }
 
-  init() async {
+  Future<void> init() async {
     if (isMobile) {
       OneSignal.Notifications.addClickListener((notification) {
         if (notification.notification.launchUrl != null && !notification.notification.launchUrl!.isEmptyOrNull) {
@@ -56,6 +64,7 @@ class DashboardScreenState extends State<DashboardScreen> {
       });
     }
 
+    createRewardedAd();
     _startSessionCheck();
   }
   
@@ -124,7 +133,43 @@ class DashboardScreenState extends State<DashboardScreen> {
           BottomNavigationBarItem(icon: Icon(Ionicons.person_outline, size: 20), activeIcon: Column(children: [Icon(Ionicons.person, size: 22), mLine()]), label: ""),
         ],
       ),
+      bottomSheet: Observer(
+        builder: (_) {
+          if (authStore.isPremiumUser) return Offstage();
+          return Container(
+            color: Color(0xFF9155FD),
+            width: context.width(),
+            height: 50,
+            child: InkWell(
+              onTap: () {
+                showRewardedAd(onUserEarnedReward: () {
+                  rewardAd().then((value) {
+                    if (value['success'] == true) {
+                      toast(value['message']);
+                      // Update coins in store
+                      if (value['new_balance'] != null) {
+                        authStore.coins = value['new_balance'];
+                      }
+                    }
+                  }).catchError((e) {
+                    toast(e.toString());
+                  });
+                });
+              },
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  children: [
+                    Icon(Icons.play_circle_fill, color: Colors.white, size: 24),
+                    12.width,
+                    Text("Video izle ve 1 Jeton kazan", style: boldTextStyle(color: Colors.white, size: 14)),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }
-

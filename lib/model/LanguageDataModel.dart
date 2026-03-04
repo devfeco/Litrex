@@ -24,9 +24,9 @@ class LanguageDataModel {
   static List<String> languages() {
     List<String> list = [];
 
-    localeLanguageList.forEach((element) {
+    for (var element in localeLanguageList) {
       list.add(element.languageCode!.validate());
-    });
+    }
 
     return list;
   }
@@ -34,9 +34,9 @@ class LanguageDataModel {
   static List<Locale> languageLocales() {
     List<Locale> list = [];
 
-    localeLanguageList.forEach((element) {
+    for (var element in localeLanguageList) {
       list.add(Locale(element.languageCode!.validate(), element.fullLanguageCode.validate()));
-    });
+    }
 
     return list;
   }
@@ -45,11 +45,11 @@ class LanguageDataModel {
 LanguageDataModel? getSelectedLanguageModel({String? defaultLanguage}) {
   LanguageDataModel? data;
 
-  localeLanguageList.forEach((element) {
+  for (var element in localeLanguageList) {
     if (element.languageCode == getStringAsync(SELECTED_LANGUAGE_CODE, defaultValue: defaultLanguage ?? DEFAULT_LANGUAGE)) {
       data = element;
     }
-  });
+  }
 
   return data;
 }

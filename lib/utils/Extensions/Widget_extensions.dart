@@ -87,8 +87,8 @@ extension WidgetExtension on Widget? {
         topLeft: Radius.circular(topLeft.toDouble()),
         topRight: Radius.circular(topRight.toDouble()),
       ),
-      child: this,
       clipBehavior: Clip.antiAliasWithSaveLayer,
+      child: this,
     );
   }
 
@@ -96,8 +96,8 @@ extension WidgetExtension on Widget? {
   ClipRRect cornerRadiusWithClipRRect(double radius) {
     return ClipRRect(
       borderRadius: BorderRadius.all(Radius.circular(radius)),
-      child: this,
       clipBehavior: Clip.antiAliasWithSaveLayer,
+      child: this,
     );
   }
 
@@ -119,8 +119,8 @@ extension WidgetExtension on Widget? {
       maintainSemantics: maintainSemantics,
       maintainSize: maintainSize,
       maintainState: maintainState,
-      child: this!,
       replacement: replacement ?? SizedBox(),
+      child: this!,
     );
   }
 
@@ -160,10 +160,10 @@ extension WidgetExtension on Widget? {
   }) {
     return Transform.scale(
       scale: scale,
-      child: this,
       origin: origin,
       alignment: alignment,
       transformHitTests: transformHitTests,
+      child: this,
     );
   }
 
@@ -176,8 +176,8 @@ extension WidgetExtension on Widget? {
     return Transform.translate(
       offset: offset,
       transformHitTests: transformHitTests,
-      child: this,
       key: key,
+      child: this,
     );
   }
 
@@ -257,10 +257,10 @@ extension WidgetExtension on Widget? {
     return InkWell(
       onTap: function as void Function()?,
       borderRadius: borderRadius ?? (defaultInkWellRadius != null ? radiusWidget(defaultInkWellRadius) : null),
-      child: this,
       splashColor: splashColor ?? defaultInkWellSplashColor,
       hoverColor: hoverColor ?? defaultInkWellHoverColor,
       highlightColor: highlightColor ?? defaultInkWellHighlightColor,
+      child: this,
     );
   }
 
@@ -312,7 +312,6 @@ extension WidgetExtension on Widget? {
     required bool reverse,
   }) {
     return SingleChildScrollView(
-      child: this,
       physics: physics,
       padding: padding,
       scrollDirection: scrollDirection,
@@ -320,23 +319,24 @@ extension WidgetExtension on Widget? {
       dragStartBehavior: dragStartBehavior,
       primary: primary,
       reverse: reverse,
+      child: this,
     );
   }
 
   /// add Expanded to parent widget
-  Widget expand({flex = 1}) => Expanded(child: this!, flex: flex);
+  Widget expand({flex = 1}) => Expanded(flex: flex, child: this!);
 
   /// add Flexible to parent widget
   Widget flexible({flex = 1, FlexFit? fit}) {
-    return Flexible(child: this!, flex: flex, fit: fit ?? FlexFit.loose);
+    return Flexible(flex: flex, fit: fit ?? FlexFit.loose, child: this!);
   }
 
   /// add FittedBox to parent widget
   Widget fit({BoxFit? fit, AlignmentGeometry? alignment}) {
     return FittedBox(
-      child: this,
       fit: fit ?? BoxFit.contain,
       alignment: alignment ?? Alignment.center,
+      child: this,
     );
   }
 

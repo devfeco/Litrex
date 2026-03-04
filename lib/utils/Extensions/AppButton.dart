@@ -26,7 +26,7 @@ class AppButtonWidget extends StatefulWidget {
   final bool? enabled;
   final bool? enableScaleAnimation;
 
-  AppButtonWidget({
+  const AppButtonWidget({super.key, 
     this.onTap,
     this.text,
     this.width,
@@ -115,14 +115,6 @@ class _AppButtonWidgetState extends State<AppButtonWidget>
             ? widget.onTap as void Function()?
             : null,
         color: widget.color ?? appButtonBackgroundColorGlobal,
-        child: widget.child ??
-            Text(
-              widget.text!.validate(),
-              style: widget.textStyle ??
-                  boldTextStyle(
-                    color: widget.textColor ?? Colors.white,
-                  ),
-            ),
         shape: widget.shapeBorder ?? defaultAppButtonShapeBorder,
         elevation: widget.elevation ?? defaultAppButtonElevation,
         animationDuration: Duration(milliseconds: 300),
@@ -131,6 +123,14 @@ class _AppButtonWidgetState extends State<AppButtonWidget>
         focusColor: widget.focusColor,
         hoverColor: widget.hoverColor,
         splashColor: widget.splashColor,
+        child: widget.child ??
+            Text(
+              widget.text!.validate(),
+              style: widget.textStyle ??
+                  boldTextStyle(
+                    color: widget.textColor ?? Colors.white,
+                  ),
+            ),
       ),
     );
   }

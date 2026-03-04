@@ -14,7 +14,7 @@ class HomeSliderComponent extends StatefulWidget {
 
   final AppSlider mSliderList;
 
-  HomeSliderComponent(this.mSliderList);
+  const HomeSliderComponent(this.mSliderList, {super.key});
 
   @override
   HomeSliderComponentState createState() => HomeSliderComponentState();
@@ -27,7 +27,7 @@ class HomeSliderComponentState extends State<HomeSliderComponent> {
     init();
   }
 
-  init() async {
+  Future<void> init() async {
     //
   }
 

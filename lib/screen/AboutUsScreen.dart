@@ -14,6 +14,8 @@ import '../utils/constant.dart';
 import '../utils/images.dart';
 
 class AboutUsScreen extends StatefulWidget {
+  const AboutUsScreen({super.key});
+
   @override
   _AboutUsScreenState createState() => _AboutUsScreenState();
 }
@@ -38,7 +40,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBarWidget(language.lblAboutUs, color: primaryColor, showBack: true, elevation: 0, textColor: Colors.white),
-      bottomNavigationBar: Container(
+      bottomNavigationBar: SizedBox(
         height: 120,
         child: Column(
           children: [
@@ -119,7 +121,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('${snap.data!.appName.validate()}', style: boldTextStyle(size: 20, color: primaryColor)),
+                  Text(snap.data!.appName.validate(), style: boldTextStyle(size: 20, color: primaryColor)),
                   2.height,
                   Container(height: 2, width: 110, color: primaryColor),
                   16.height,

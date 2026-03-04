@@ -25,7 +25,7 @@ class ViewAllScreen extends StatefulWidget {
   final String? title;
   final bool? isCategory;
 
-  ViewAllScreen({this.categoryId, this.title, this.isFeatured = false, this.isLatest = false, this.isCategory = false, this.isPopular = false, this.isSuggested = false});
+  const ViewAllScreen({super.key, this.categoryId, this.title, this.isFeatured = false, this.isLatest = false, this.isCategory = false, this.isPopular = false, this.isSuggested = false});
 
   @override
   ViewAllScreenState createState() => ViewAllScreenState();
@@ -58,11 +58,11 @@ class ViewAllScreenState extends State<ViewAllScreen> {
     }
   }
 
-  init() async {
+  Future<void> init() async {
     getAPI();
   }
 
-  scrollHandler() {
+  void scrollHandler() {
     if (scrollController.position.pixels == scrollController.position.maxScrollExtent && !appStore.isLoading) {
       currentPage++;
       init();
@@ -99,7 +99,7 @@ class ViewAllScreenState extends State<ViewAllScreen> {
     if (mounted) super.setState(fn);
   }
 
-  loadData(List<Book> value) {
+  void loadData(List<Book> value) {
     if (!mounted) return;
     setState(() {
       appStore.setLoading(false);
@@ -111,13 +111,13 @@ class ViewAllScreenState extends State<ViewAllScreen> {
     });
   }
 
-  catchData() {
+  void catchData() {
     if (!mounted) return;
     isLastPage = true;
     appStore.setLoading(false);
   }
 
-  getAPI() {
+  Future<Null> getAPI() {
     appStore.setLoading(true);
     if (widget.isFeatured == true) {
       return getFilterBooks(isFeature: true, page: currentPage).then((value) {
@@ -135,9 +135,9 @@ class ViewAllScreenState extends State<ViewAllScreen> {
       });
     } else if (widget.isSuggested == true) {
       List<String>? mIdList = getStringListAsync(chooseTopicList);
-      mIdList!.forEach((element) {
+      for (var element in mIdList!) {
         mCategoryId.add(element);
-      });
+      }
       return getFilterBooks(list: mCategoryId, page: currentPage).then((value) {
         loadData(value);
       }).catchError((e) {
@@ -169,7 +169,7 @@ class ViewAllScreenState extends State<ViewAllScreen> {
     }
   }
 
-  getTitle() {
+  String getTitle() {
     if (widget.isFeatured == true) {
       return language.lblFeatured;
     } else if (widget.isPopular == true) {

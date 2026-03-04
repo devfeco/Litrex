@@ -21,7 +21,7 @@ class AuthorDetailScreen extends StatefulWidget {
   static String tag = '/AuthorDetailScreen';
   final Author data;
 
-  AuthorDetailScreen(this.data);
+  const AuthorDetailScreen(this.data, {super.key});
 
   @override
   AuthorDetailScreenState createState() => AuthorDetailScreenState();
@@ -36,7 +36,7 @@ class AuthorDetailScreenState extends State<AuthorDetailScreen> {
     init();
   }
 
-  init() async {
+  Future<void> init() async {
     //
     var request = {'author_id': widget.data.id};
     getAuthorBook(request).then((res) {

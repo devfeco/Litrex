@@ -2,21 +2,20 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../main.dart';
-import '../../model/UserModel.dart';
 import '../../network/AuthApis.dart';
 import '../../utils/Extensions/AppButton.dart';
 import '../../utils/Extensions/AppTextField.dart';
 import '../../utils/Extensions/Commons.dart';
-import '../../utils/Extensions/Widget_extensions.dart';
 import '../../utils/Extensions/context_extensions.dart';
 import '../../utils/Extensions/decorations.dart';
 import '../../utils/Extensions/int_extensions.dart';
 import '../../utils/Extensions/text_styles.dart';
-import '../../utils/appWidget.dart';
 import '../../utils/colors.dart';
 
 class EditProfileScreen extends StatefulWidget {
   static String tag = '/EditProfileScreen';
+
+  const EditProfileScreen({super.key});
 
   @override
   EditProfileScreenState createState() => EditProfileScreenState();
@@ -465,6 +464,7 @@ class EditProfileScreenState extends State<EditProfileScreen>
                               shapeBorder: RoundedRectangleBorder(
                                 borderRadius: radius(16),
                               ),
+                              onTap: isLoading ? null : handleSave,
                               child: isLoading
                                   ? SizedBox(
                                       width: 24,
@@ -488,7 +488,6 @@ class EditProfileScreenState extends State<EditProfileScreen>
                                         ),
                                       ],
                                     ),
-                              onTap: isLoading ? null : handleSave,
                             ),
                           ),
 

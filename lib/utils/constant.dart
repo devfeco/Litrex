@@ -19,6 +19,8 @@ const adMobBannerId = "YOUR_ADMOB_BANNER_ID";
 const adMobInterstitialId = "YOUR_ADMOB_INTERSTITIAL_ID";
 const adMobBannerIdIos = "YOUR_ADMOB_BANNER_ID_IOS";
 const adMobInterstitialIdIos = "YOUR_ADMOB_INTERSTITIAL_ID_IOS";
+const adMobRewardedId = "ca-app-pub-3940256099942544/5224354917"; // Test ID
+const adMobRewardedIdIos = "ca-app-pub-3940256099942544/1712485313"; // Test ID
 
 const mOneSignalID = 'fa92acd8-f88e-4d26-9077-7836bade6c9b';
 
@@ -37,6 +39,8 @@ const ADMOB_NATIVE_ID = 'admob_native_id';
 const ADMOB_NATIVE_ID_IOS = 'admob_native_id_ios';
 const ADMOB_ADAPTIVE_BANNER_ID = 'admob_adaptive_banner_id';
 const ADMOB_ADAPTIVE_BANNER_ID_IOS = 'admob_adaptive_banner_id_ios';
+const ADMOB_REWARDED_ID = 'admob_rewarded_id';
+const ADMOB_REWARDED_ID_IOS = 'admob_rewarded_id_ios';
 
 const FACEBOOK_NATIVE_ID = 'facebook_native_id';
 const FACEBOOK_NATIVE_ID_IOS = 'facebook_native_id_ios';

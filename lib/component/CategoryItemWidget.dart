@@ -15,7 +15,7 @@ class CategoryItemWidget extends StatefulWidget {
   final Category data;
   final Function? onTap;
 
-  CategoryItemWidget(this.data, {this.onTap});
+  const CategoryItemWidget(this.data, {super.key, this.onTap});
 
   @override
   CategoryItemWidgetState createState() => CategoryItemWidgetState();

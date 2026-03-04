@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import '../../main.dart';
-import '../../model/UserModel.dart';
 import '../../network/AuthApis.dart';
-import '../../utils/Extensions/AppButton.dart';
 import '../../utils/Extensions/Commons.dart';
 import '../../utils/Extensions/Widget_extensions.dart';
 import '../../utils/Extensions/context_extensions.dart';
@@ -12,7 +10,6 @@ import '../../utils/Extensions/decorations.dart';
 import '../../utils/Extensions/int_extensions.dart';
 import '../../utils/Extensions/text_styles.dart';
 import '../../utils/colors.dart';
-import '../../utils/images.dart';
 import '../SettingScreen.dart';
 import '../BookmarkScreen.dart';
 import 'EditProfileScreen.dart';
@@ -23,6 +20,8 @@ import '../DownloadScreen.dart';
 
 class ProfileScreen extends StatefulWidget {
   static String tag = '/ProfileScreen';
+
+  const ProfileScreen({super.key});
 
   @override
   ProfileScreenState createState() => ProfileScreenState();
@@ -388,7 +387,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                         appStore.setNotification(val);
                         setState(() {});
                       },
-                      activeColor: primaryColor,
+                      activeThumbColor: primaryColor,
                     ),
                   ),
                   

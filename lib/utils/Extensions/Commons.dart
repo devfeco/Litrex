@@ -20,7 +20,7 @@ import 'device_extensions.dart';
 bool hasMatch(String? s, String p) {
   return (s == null) ? false : RegExp(p).hasMatch(s);
 }
-get getContext => navigatorKey.currentState?.overlay?.context;
+BuildContext? get getContext => navigatorKey.currentState?.overlay?.context;
 void finish(BuildContext context, [Object? result]) {
   if (Navigator.canPop(context)) Navigator.pop(context, result);
 }
@@ -181,12 +181,12 @@ Future<T?> push<T>(
       Duration? duration,
     }) async {
   if (isNewTask) {
-    return await Navigator.of(getContext).pushAndRemoveUntil(
+    return await Navigator.of(getContext!).pushAndRemoveUntil(
       buildPageRoute(widget, pageRouteAnimation, duration),
           (route) => false,
     );
   } else {
-    return await Navigator.of(getContext).push(
+    return await Navigator.of(getContext!).push(
       buildPageRoute(widget, pageRouteAnimation, duration),
     );
   }
@@ -194,10 +194,10 @@ Future<T?> push<T>(
 
 /// Dispose current screen or close current dialog
 void pop([Object? object]) {
-  if (Navigator.canPop(getContext)) Navigator.pop(getContext, object);
+  if (Navigator.canPop(getContext!)) Navigator.pop(getContext!, object);
 }
 
-toast(String? value, {ToastGravity? gravity, length = Toast.LENGTH_SHORT, Color? bgColor, Color? textColor}) {
+void toast(String? value, {ToastGravity? gravity, length = Toast.LENGTH_SHORT, Color? bgColor, Color? textColor}) {
   Fluttertoast.showToast(
     msg: value.validate(),
     toastLength: length,

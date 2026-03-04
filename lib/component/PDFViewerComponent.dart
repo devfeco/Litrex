@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dart:typed_data';
 import 'package:shared_preferences/shared_preferences.dart';      // <<< SON SAYFA KAYDI İÇİN
 
 import '../utils/Extensions/Commons.dart';
@@ -17,7 +16,7 @@ class PDFViewerComponent extends StatefulWidget {
   final bool isAdsLoad;
   final Uint8List? fileBytes;
 
-  PDFViewerComponent({required this.url, required this.title, this.isAdsLoad = false, this.fileBytes});
+  const PDFViewerComponent({super.key, required this.url, required this.title, this.isAdsLoad = false, this.fileBytes});
 
   @override
   PDFViewerComponentState createState() => PDFViewerComponentState();
@@ -34,8 +33,8 @@ class PDFViewerComponentState extends State<PDFViewerComponent> {
     init();
   }
 
-  init() async {
-    print("PDF Path=>" + widget.url);
+  Future<void> init() async {
+    print("PDF Path=>${widget.url}");
     _pdfViewerController = PdfViewerController();
 
     /// 🔥 PDF yeniden açıldığında son kaldığın sayfaya otomatik gider
@@ -57,7 +56,7 @@ class PDFViewerComponentState extends State<PDFViewerComponent> {
 
   /// 🔥 Metin seçilince kopyalama menüsü
   void _showContextMenu(BuildContext context, PdfTextSelectionChangedDetails details) {
-    final OverlayState? _overlayState = Overlay.of(context);
+    final OverlayState overlayState = Overlay.of(context);
     _overlayEntry = OverlayEntry(
       builder: (context) => Positioned(
         top: details.globalSelectedRegion!.center.dy - 55,
@@ -70,7 +69,7 @@ class PDFViewerComponentState extends State<PDFViewerComponent> {
             }),
       ),
     );
-    _overlayState!.insert(_overlayEntry!);
+    overlayState.insert(_overlayEntry!);
   }
 
   @override

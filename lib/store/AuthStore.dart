@@ -21,6 +21,9 @@ abstract class _AuthStore with Store {
   @observable
   String? authToken;
   
+  @observable
+  int coins = 0;
+  
   @computed
   bool get isPremiumUser => currentUser?.isPremium == 1;
 
@@ -46,6 +49,8 @@ abstract class _AuthStore with Store {
       await setValue(USER_BIO, user.bio ?? '');
       await setValue('IS_PREMIUM', user.isPremium ?? 0);
       await setValue('STATUS', user.status ?? 'active');
+      await setValue('COINS', user.coins ?? 0);
+      coins = user.coins ?? 0;
 
     }
   }
@@ -73,8 +78,9 @@ abstract class _AuthStore with Store {
         bio: getStringAsync(USER_BIO),
         isPremium: getIntAsync('IS_PREMIUM'),
         status: getStringAsync('STATUS', defaultValue: 'active'),
+        coins: getIntAsync('COINS'),
       );
-
+      coins = getIntAsync('COINS');
     }
   }
 
@@ -94,6 +100,8 @@ abstract class _AuthStore with Store {
     await setValue(USER_BIO, '');
     await setValue('IS_PREMIUM', 0);
     await setValue('STATUS', '');
+    await setValue('COINS', 0);
+    coins = 0;
 
   }
 

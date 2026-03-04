@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart';
 import '../main.dart';
 import '../model/DashboardResponse.dart';
+import '../model/CoinPackageModel.dart';
 import '../network/NetworkUtils.dart';
 import '../utils/constant.dart';
 import '../utils/Extensions/string_extensions.dart';
@@ -172,6 +174,65 @@ Future<Map<String, dynamic>> sendSupportMessage({
       'message': message,
       if (email != null) 'email': email,
       if (name != null) 'name': name,
+    },
+  );
+  return await handleResponse(response);
+}
+
+/// Reklam izleyip jeton kazanma bildirimi
+Future<Map<String, dynamic>> rewardAd() async {
+  final response = await buildHttpResponse(
+    'coins/reward-ad.php',
+    method: HttpMethod.POST,
+  );
+  return await handleResponse(response);
+}
+
+/// Jeton ile kitap açma (harcanan jetonlar iade edilmez)
+Future<Map<String, dynamic>> unlockBookWithCoins(String bookId) async {
+  final response = await buildHttpResponse(
+    'books/unlock-with-coins.php',
+    method: HttpMethod.POST,
+    request: {
+      'book_id': bookId,
+    },
+  );
+  return await handleResponse(response);
+}
+
+/// Admin tarafından eklenen jeton paketlerini getir (SKU, coin miktarı vb.)
+Future<List<CoinPackage>> getCoinPackages() async {
+  final response = await buildHttpResponse(
+    'coins/packages.php',
+    method: HttpMethod.GET,
+  );
+  final data = await handleResponse(response);
+  if (data is List) {
+    return data.map((e) => CoinPackage.fromJson(Map<String, dynamic>.from(e))).toList();
+  }
+  if (data is Map && data['packages'] != null) {
+    final list = data['packages'] as List;
+    return list.map((e) => CoinPackage.fromJson(Map<String, dynamic>.from(e))).toList();
+  }
+  return [];
+}
+
+/// Jeton satın alımını backend'de doğrula; Google'dan gelen token ile coin eklenir.
+Future<Map<String, dynamic>> verifyCoinPurchase({
+  required String purchaseToken,
+  required String productId,
+  required String orderId,
+  required String purchaseTime,
+}) async {
+  final response = await buildHttpResponse(
+    'coins/verify-purchase.php',
+    method: HttpMethod.POST,
+    request: {
+      'purchase_token': purchaseToken,
+      'product_id': productId,
+      'order_id': orderId,
+      'purchase_time': purchaseTime,
+      'type': Platform.isAndroid ? 'android' : 'ios',
     },
   );
   return await handleResponse(response);

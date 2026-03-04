@@ -12,7 +12,7 @@ import '../utils/Extensions/text_styles.dart';
 import '../utils/colors.dart';
 import '../utils/images.dart';
 
-showDialogBox(context, title, {Function? onCall, onCancelCall}) {
+Future showDialogBox(context, title, {Function? onCall, onCancelCall}) {
   return showDialog(
       context: context,
       builder: (context) {

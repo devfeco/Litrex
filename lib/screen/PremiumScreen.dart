@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
@@ -7,16 +6,17 @@ import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../network/AuthApis.dart';
 import '../../main.dart';
-import '../../utils/colors.dart';
 import '../../utils/Extensions/Widget_extensions.dart';
-import '../../utils/Extensions/context_extensions.dart';
 import '../../utils/Extensions/decorations.dart';
 import '../../utils/Extensions/text_styles.dart';
 import '../../utils/Extensions/Commons.dart';
+import '../../utils/Extensions/string_extensions.dart';
 import '../../utils/Extensions/int_extensions.dart';
 
 class PremiumScreen extends StatefulWidget {
   static String tag = '/PremiumScreen';
+
+  const PremiumScreen({super.key});
 
   @override
   _PremiumScreenState createState() => _PremiumScreenState();
@@ -95,18 +95,25 @@ class _PremiumScreenState extends State<PremiumScreen> with SingleTickerProvider
     super.dispose();
   }
 
-  void _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) {
-      purchaseDetailsList.forEach((PurchaseDetails purchaseDetails) async {
-        print("Purchase Update: ${purchaseDetails.status}");
+  void _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) async {
+      for (var purchaseDetails in purchaseDetailsList) {
+        print("Purchase Update Status: ${purchaseDetails.status}");
         
         if (purchaseDetails.status == PurchaseStatus.pending) {
-          toast("İşlem bekleniyor...");
+          toast("Ödeme bekleniyor...");
         } else if (purchaseDetails.status == PurchaseStatus.error) {
            print("Purchase Error Details: ${purchaseDetails.error}");
            toast("İşlem başarısız: ${purchaseDetails.error?.message}");
+           setState(() => _isLoading = false);
         } else if (purchaseDetails.status == PurchaseStatus.purchased ||
                    purchaseDetails.status == PurchaseStatus.restored) {
            
+           if (authStore.authToken.validate().isEmpty) {
+             toast("Doğrulama hatası: Oturum açılmamış.");
+             setState(() => _isLoading = false);
+             continue;
+           }
+
            setState(() => _isLoading = true);
            String? error = await _verifyPurchase(purchaseDetails);
            setState(() => _isLoading = false);
@@ -125,8 +132,9 @@ class _PremiumScreenState extends State<PremiumScreen> with SingleTickerProvider
            }
         } else if (purchaseDetails.status == PurchaseStatus.canceled) {
            toast("İşlem iptal edildi.");
+           setState(() => _isLoading = false);
         }
-      });
+      }
   }
 
   Future<void> _restorePurchases() async {
@@ -146,23 +154,39 @@ class _PremiumScreenState extends State<PremiumScreen> with SingleTickerProvider
   
   Future<String?> _verifyPurchase(PurchaseDetails purchaseDetails) async {
     try {
-      print("Verifying purchase: ${purchaseDetails.productID}, Token: ${purchaseDetails.verificationData.serverVerificationData}");
+      String? purchaseToken = purchaseDetails.verificationData.serverVerificationData;
+      
+      print("Verifying purchase: ${purchaseDetails.productID}, Token: $purchaseToken");
+
+      if (purchaseToken.isEmptyOrNull) {
+        print("Bilinmeyen Doğrulama Hatası: serverVerificationData boş");
+        return "Doğrulama verisi boş (Token null)";
+      }
+
       // Backend'e doğrulama gönder
       final response = await updatePremiumStatus(
-        purchaseToken: purchaseDetails.verificationData.serverVerificationData, // Google Play için token
+        purchaseToken: purchaseToken,
         productId: purchaseDetails.productID,
         orderId: purchaseDetails.purchaseID ?? '',
         purchaseTime: purchaseDetails.transactionDate ?? '',
       );
       
-      if (response != null && response.success == true) {
+      if ((response.success ?? false)) {
         // Başarılı ise store'u güncelle. Response.user null olabilir, kontrol et.
         if (response.user != null) {
             await authStore.setUser(response.user!);
+        } else {
+            // Success ama user objesi dönmemişse profili tekrar çekelim
+            try {
+              final user = await getProfile();
+              await authStore.setUser(user);
+            } catch (error) {
+              print("Profil güncellenirken hata oluştu: $error");
+            }
         }
         return null; // Başarılı, hata yok
       }
-      return response?.message ?? "Sunucu doğrulama hatası: Bilinmeyen hata";
+      return response.message ?? "Sunucu doğrulama hatası: Bilinmeyen hata";
     } catch (e) {
       print("Premium Doğrulama Hatası: $e");
       return "Bağlantı hatası: $e";

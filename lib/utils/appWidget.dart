@@ -127,7 +127,7 @@ Widget showBannerAds() {
   if (authStore.isPremiumUser) return SizedBox();
   return getStringAsync(ADD_TYPE) != NONE
       ? getStringAsync(ADD_TYPE) == isGoogleAds
-          ? Container(
+          ? SizedBox(
               height: 60,
               child: AdWidget(
                 ad: BannerAd(

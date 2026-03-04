@@ -22,7 +22,7 @@ class ChooseTopicScreen extends StatefulWidget {
   static String tag = '/ChooseTopicScreen';
   final bool isVisibleBack;
 
-  ChooseTopicScreen({this.isVisibleBack=true});
+  const ChooseTopicScreen({super.key, this.isVisibleBack=true});
 
   @override
   ChooseTopicScreenState createState() => ChooseTopicScreenState();
@@ -38,12 +38,12 @@ class ChooseTopicScreenState extends State<ChooseTopicScreen> {
     init();
   }
 
-  init() async {
+  Future<void> init() async {
     //
     getCategoryList();
   }
 
-  getCategoryList() async {
+  Future<void> getCategoryList() async {
     appStore.setLoading(true);
     await getCategories().then((value) {
       catResponse = value;
@@ -65,18 +65,19 @@ class ChooseTopicScreenState extends State<ChooseTopicScreen> {
       appBar: appBarWidget(language.lblChooseTopic, color: primaryColor, textColor: Colors.white, showBack: widget.isVisibleBack),
       bottomNavigationBar: AppButtonWidget(
         width: context.width(),
-        child: Text(language.lblContinue, style: boldTextStyle(color: Colors.white)),
         shapeBorder: RoundedRectangleBorder(
           borderRadius: radius(defaultAppButtonRadius),
           side: BorderSide(color: primaryColor),
         ),
         onTap: () {
-          if (getStringListAsync(chooseTopicList) != null && getStringListAsync(chooseTopicList)!.length >= 3)
+          if (getStringListAsync(chooseTopicList) != null && getStringListAsync(chooseTopicList)!.length >= 3) {
             DashboardScreen().launch(context, isNewTask: true);
-          else
+          } else {
             toast(language.lblChooseTopicMsg);
+          }
         },
         color: primaryColor,
+        child: Text(language.lblContinue, style: boldTextStyle(color: Colors.white)),
       ).paddingAll(16).visible(catResponse!.isNotEmpty),
       body: Stack(
         children: [
@@ -109,8 +110,9 @@ class ChooseTopicScreenState extends State<ChooseTopicScreen> {
                                     selectedId = getStringListAsync(chooseTopicList)!;
                                     if (selectedId.contains(data.id!.toString()) == true) {
                                       selectedId.remove(data.id!.toString());
-                                    } else
+                                    } else {
                                       selectedId.add(data.id!.toString());
+                                    }
                                     setValue(chooseTopicList, selectedId);
                                   } else {
                                     selectedId.add(data.id!.toString());
@@ -134,7 +136,7 @@ class ChooseTopicScreenState extends State<ChooseTopicScreen> {
                                                 : context.cardColor
                                             : context.cardColor),
                                     padding: EdgeInsets.fromLTRB(10, 8, 10, 8),
-                                    child: Text(data.name.validate() + " ",
+                                    child: Text("${data.name.validate()} ",
                                         style: primaryTextStyle(
                                             color: getStringListAsync(chooseTopicList) != null
                                                 ? getStringListAsync(chooseTopicList)!.contains(data.id!.toString())

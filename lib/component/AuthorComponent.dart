@@ -11,7 +11,7 @@ class AuthorComponent extends StatefulWidget {
   final bool? isSlider;
   final Author data;
 
-  AuthorComponent(this.data, {this.onTap, this.isSlider = false});
+  const AuthorComponent(this.data, {super.key, this.onTap, this.isSlider = false});
 
   @override
   AuthorComponentState createState() => AuthorComponentState();
@@ -24,7 +24,7 @@ class AuthorComponentState extends State<AuthorComponent> {
     init();
   }
 
-  init() async {
+  Future<void> init() async {
     //
   }
 

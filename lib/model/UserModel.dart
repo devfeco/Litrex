@@ -9,6 +9,7 @@ class UserModel {
   String? updatedAt;
   int? isPremium;
   String? status;
+  int? coins;
 
 
   UserModel({
@@ -22,6 +23,7 @@ class UserModel {
     this.updatedAt,
     this.isPremium,
     this.status,
+    this.coins,
   });
 
 
@@ -38,6 +40,7 @@ class UserModel {
       updatedAt: json['updated_at'],
       isPremium: json['is_premium'] is String ? int.tryParse(json['is_premium']) : json['is_premium'],
       status: json['status']?.toString(),
+      coins: json['coins'] is String ? int.tryParse(json['coins']) : json['coins'],
     );
   }
 
@@ -53,6 +56,7 @@ class UserModel {
       'updated_at': updatedAt,
       'is_premium': isPremium,
       'status': status,
+      'coins': coins,
     };
   }
 }
@@ -78,11 +82,20 @@ class AuthResponse {
       user.status = json['user_status']?.toString();
     }
     
+    bool? successValue;
+    if (json['success'] is bool) {
+      successValue = json['success'];
+    } else if (json['success'] is String) {
+      successValue = json['success'].toString().toLowerCase() == 'true' || json['success'] == '1';
+    } else if (json['success'] is int) {
+      successValue = json['success'] == 1;
+    }
+
     return AuthResponse(
-      success: json['success'],
-      message: json['message'],
+      success: successValue,
+      message: json['message']?.toString(),
       user: user,
-      token: json['token'],
+      token: json['token']?.toString(),
     );
   }
 }

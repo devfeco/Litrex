@@ -6,7 +6,7 @@ import '../utils/constant.dart';
 
 InterstitialAd? interstitialAd;
 
-adShow() async {
+Future<void> adShow() async {
   if (interstitialAd == null) {
     print('Warning: attempt to show interstitial before loaded.');
     return;
@@ -63,4 +63,56 @@ String? getBannerAdUnitId() {
     return getStringAsync(ADMOB_BANNER_ID).isNotEmpty ? getStringAsync(ADMOB_BANNER_ID) : adMobBannerId;
   }
   return null;
+}
+
+RewardedAd? rewardedAd;
+
+String? getRewardedAdUnitId() {
+  if (Platform.isIOS) {
+    return getStringAsync(ADMOB_REWARDED_ID_IOS).isNotEmpty ? getStringAsync(ADMOB_REWARDED_ID_IOS) : adMobRewardedIdIos;
+  } else if (Platform.isAndroid) {
+    return getStringAsync(ADMOB_REWARDED_ID).isNotEmpty ? getStringAsync(ADMOB_REWARDED_ID) : adMobRewardedId;
+  }
+  return null;
+}
+
+void createRewardedAd() {
+  RewardedAd.load(
+    adUnitId: kReleaseMode
+        ? getRewardedAdUnitId()!
+        : Platform.isIOS
+            ? adMobRewardedIdIos
+            : adMobRewardedId,
+    request: AdRequest(),
+    rewardedAdLoadCallback: RewardedAdLoadCallback(
+      onAdLoaded: (RewardedAd ad) {
+        rewardedAd = ad;
+      },
+      onAdFailedToLoad: (LoadAdError error) {
+        rewardedAd = null;
+      },
+    ),
+  );
+}
+
+void showRewardedAd({required Function onUserEarnedReward}) {
+  if (rewardedAd == null) {
+     createRewardedAd();
+     return;
+  }
+  rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
+    onAdDismissedFullScreenContent: (RewardedAd ad) {
+      ad.dispose();
+      createRewardedAd();
+    },
+    onAdFailedToShowFullScreenContent: (RewardedAd ad, AdError error) {
+      ad.dispose();
+      createRewardedAd();
+    },
+  );
+
+  rewardedAd!.show(onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
+    onUserEarnedReward();
+  });
+  rewardedAd = null;
 }

@@ -1,20 +1,14 @@
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import '../../main.dart';
-import '../../model/UserModel.dart';
 import '../../network/AuthApis.dart';
-import '../../utils/Extensions/AppButton.dart';
 import '../../utils/Extensions/AppTextField.dart';
 import '../../utils/Extensions/Commons.dart';
 import '../../utils/Extensions/Widget_extensions.dart';
 import '../../utils/Extensions/context_extensions.dart';
 import '../../utils/Extensions/decorations.dart';
-import '../../utils/Extensions/int_extensions.dart';
-import '../../utils/Extensions/string_extensions.dart';
 import '../../utils/Extensions/text_styles.dart';
 import '../../utils/Extensions/shared_pref.dart';
 import '../../utils/colors.dart';
@@ -27,6 +21,8 @@ import '../DashboardScreen.dart';
 
 class LoginScreen extends StatefulWidget {
   static String tag = '/LoginScreen';
+
+  const LoginScreen({super.key});
 
   @override
   LoginScreenState createState() => LoginScreenState();

@@ -7,7 +7,6 @@ import '../utils/Extensions/Widget_extensions.dart';
 import '../utils/Extensions/context_extensions.dart';
 import '../utils/Extensions/decorations.dart';
 import '../utils/Extensions/int_extensions.dart';
-import '../utils/Extensions/string_extensions.dart';
 import '../utils/Extensions/text_styles.dart';
 import '../utils/colors.dart';
 import '../utils/images.dart';
@@ -16,12 +15,13 @@ import '../utils/Extensions/Commons.dart';
 import '../utils/Extensions/Constants.dart';
 import '../utils/Extensions/Loader.dart';
 import '../component/PDFViewerComponent.dart';
-import 'BookDetailScreen.dart';
 import 'PremiumScreen.dart';
 import '../component/NativeAdWidget.dart';
 
 class DownloadScreen extends StatefulWidget {
   static String tag = '/DownloadScreen';
+
+  const DownloadScreen({super.key});
 
   @override
   DownloadScreenState createState() => DownloadScreenState();
@@ -175,14 +175,21 @@ class DownloadScreenState extends State<DownloadScreen> {
 
   Future<void> _openBook(OfflineBook book) async {
     // Check Premium Access
-    if (book.isPremium == '1' && !authStore.isPremiumUser) {
+    bool noAccess = book.isPremium == '1' && !authStore.isPremiumUser;
+    if (noAccess && book.unlockExpiry != null) {
+       if (DateTime.now().isBefore(DateTime.parse(book.unlockExpiry!))) {
+          noAccess = false;
+       }
+    }
+
+    if (noAccess) {
        PremiumScreen().launch(context);
        return;
     }
 
     // Decrypt and Open
     try {
-      final bytes = await OfflineReadingService().getDecryptedBook(book.id);
+      final bytes = await OfflineReadingService().getDecryptedBook(book.id, isPremiumUser: authStore.isPremiumUser);
       if (bytes != null) {
         PDFViewerComponent(
           title: book.bookName ?? language.lblUnknownTitle, 

@@ -24,87 +24,87 @@ class DashboardResponse {
 
   DashboardResponse.fromJson(Map<String, dynamic> json) {
     appconfiguration = json['appconfiguration'] != null
-        ? new Appconfiguration.fromJson(json['appconfiguration'])
+        ? Appconfiguration.fromJson(json['appconfiguration'])
         : null;
     adsconfiguration = json['adsconfiguration'] != null
-        ? new Adsconfiguration.fromJson(json['adsconfiguration'])
+        ? Adsconfiguration.fromJson(json['adsconfiguration'])
         : null;
     onesignalConfiguration = json['onesignal_configuration'] != null
-        ? new OnesignalConfiguration.fromJson(json['onesignal_configuration'])
+        ? OnesignalConfiguration.fromJson(json['onesignal_configuration'])
         : null;
     apiconfiguration = json['apiconfiguration'] != null
-        ? new Apiconfiguration.fromJson(json['apiconfiguration'])
+        ? Apiconfiguration.fromJson(json['apiconfiguration'])
         : null;
     if (json['slider'] != null) {
       slider = <AppSlider>[];
       json['slider'].forEach((v) {
-        slider!.add(new AppSlider.fromJson(v));
+        slider!.add(AppSlider.fromJson(v));
       });
     }
     if (json['popular_book'] != null) {
       popularBook = <Book>[];
       json['popular_book'].forEach((v) {
-        popularBook!.add(new Book.fromJson(v));
+        popularBook!.add(Book.fromJson(v));
       });
     }
     if (json['featured_book'] != null) {
       featuredBook = <Book>[];
       json['featured_book'].forEach((v) {
-        featuredBook!.add(new Book.fromJson(v));
+        featuredBook!.add(Book.fromJson(v));
       });
     }
     if (json['latest_book'] != null) {
       latestBook = <Book>[];
       json['latest_book'].forEach((v) {
-        latestBook!.add(new Book.fromJson(v));
+        latestBook!.add(Book.fromJson(v));
       });
     }
     if (json['category'] != null) {
       category = <Category>[];
       json['category'].forEach((v) {
-        category!.add(new Category.fromJson(v));
+        category!.add(Category.fromJson(v));
       });
     }
     if (json['author'] != null) {
       author = <Author>[];
       json['author'].forEach((v) {
-        author!.add(new Author.fromJson(v));
+        author!.add(Author.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.appconfiguration != null) {
-      data['appconfiguration'] = this.appconfiguration!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (appconfiguration != null) {
+      data['appconfiguration'] = appconfiguration!.toJson();
     }
-    if (this.adsconfiguration != null) {
-      data['adsconfiguration'] = this.adsconfiguration!.toJson();
+    if (adsconfiguration != null) {
+      data['adsconfiguration'] = adsconfiguration!.toJson();
     }
-    if (this.onesignalConfiguration != null) {
-      data['onesignal_configuration'] = this.onesignalConfiguration!.toJson();
+    if (onesignalConfiguration != null) {
+      data['onesignal_configuration'] = onesignalConfiguration!.toJson();
     }
-    if (this.apiconfiguration != null) {
-      data['apiconfiguration'] = this.apiconfiguration!.toJson();
+    if (apiconfiguration != null) {
+      data['apiconfiguration'] = apiconfiguration!.toJson();
     }
-    if (this.slider != null) {
-      data['slider'] = this.slider!.map((v) => v.toJson()).toList();
+    if (slider != null) {
+      data['slider'] = slider!.map((v) => v.toJson()).toList();
     }
-    if (this.popularBook != null) {
-      data['popular_book'] = this.popularBook!.map((v) => v.toJson()).toList();
+    if (popularBook != null) {
+      data['popular_book'] = popularBook!.map((v) => v.toJson()).toList();
     }
-    if (this.featuredBook != null) {
+    if (featuredBook != null) {
       data['featured_book'] =
-          this.featuredBook!.map((v) => v.toJson()).toList();
+          featuredBook!.map((v) => v.toJson()).toList();
     }
-    if (this.latestBook != null) {
-      data['latest_book'] = this.latestBook!.map((v) => v.toJson()).toList();
+    if (latestBook != null) {
+      data['latest_book'] = latestBook!.map((v) => v.toJson()).toList();
     }
-    if (this.category != null) {
-      data['category'] = this.category!.map((v) => v.toJson()).toList();
+    if (category != null) {
+      data['category'] = category!.map((v) => v.toJson()).toList();
     }
-    if (this.author != null) {
-      data['author'] = this.author!.map((v) => v.toJson()).toList();
+    if (author != null) {
+      data['author'] = author!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -120,6 +120,9 @@ class Appconfiguration {
   String? contactUs;
   String? aboutUs;
   String? copyright;
+  int? coinWelcomeBonus;
+  int? coinUnlockDuration;
+  int? adRewardCoins;
 
   Appconfiguration(
       {this.facebook,
@@ -130,7 +133,10 @@ class Appconfiguration {
         this.termsCondition,
         this.contactUs,
         this.aboutUs,
-        this.copyright});
+        this.copyright,
+        this.coinWelcomeBonus,
+        this.coinUnlockDuration,
+        this.adRewardCoins});
 
   Appconfiguration.fromJson(Map<String, dynamic> json) {
     facebook = json['facebook'];
@@ -142,19 +148,25 @@ class Appconfiguration {
     contactUs = json['contact_us'];
     aboutUs = json['about_us'];
     copyright = json['copyright'];
+    coinWelcomeBonus = json['coin_welcome_bonus'] is String ? int.tryParse(json['coin_welcome_bonus']) : json['coin_welcome_bonus'];
+    coinUnlockDuration = json['coin_unlock_duration'] is String ? int.tryParse(json['coin_unlock_duration']) : json['coin_unlock_duration'];
+    adRewardCoins = json['ad_reward_coins'] is String ? int.tryParse(json['ad_reward_coins']) : json['ad_reward_coins'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['facebook'] = this.facebook;
-    data['instagram'] = this.instagram;
-    data['twitter'] = this.twitter;
-    data['whatsapp'] = this.whatsapp;
-    data['privacy_policy'] = this.privacyPolicy;
-    data['terms_condition'] = this.termsCondition;
-    data['contact_us'] = this.contactUs;
-    data['about_us'] = this.aboutUs;
-    data['copyright'] = this.copyright;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['facebook'] = facebook;
+    data['instagram'] = instagram;
+    data['twitter'] = twitter;
+    data['whatsapp'] = whatsapp;
+    data['privacy_policy'] = privacyPolicy;
+    data['terms_condition'] = termsCondition;
+    data['contact_us'] = contactUs;
+    data['about_us'] = aboutUs;
+    data['copyright'] = copyright;
+    data['coin_welcome_bonus'] = coinWelcomeBonus;
+    data['coin_unlock_duration'] = coinUnlockDuration;
+    data['ad_reward_coins'] = adRewardCoins;
     return data;
   }
 }
@@ -252,36 +264,36 @@ class Adsconfiguration {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['ads_type'] = this.adsType;
-    data['admob_banner_id'] = this.admobBannerId;
-    data['admob_interstitial_id'] = this.admobInterstitialId;
-    data['admob_banner_id_ios'] = this.admobBannerIdIos;
-    data['admob_interstitial_id_ios'] = this.admobInterstitialIdIos;
-    data['admob_native_id'] = this.admobNativeId;
-    data['admob_native_id_ios'] = this.admobNativeIdIos;
-    data['admob_adaptive_banner_id'] = this.admobAdaptiveBannerId;
-    data['admob_adaptive_banner_id_ios'] = this.admobAdaptiveBannerIdIos;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['ads_type'] = adsType;
+    data['admob_banner_id'] = admobBannerId;
+    data['admob_interstitial_id'] = admobInterstitialId;
+    data['admob_banner_id_ios'] = admobBannerIdIos;
+    data['admob_interstitial_id_ios'] = admobInterstitialIdIos;
+    data['admob_native_id'] = admobNativeId;
+    data['admob_native_id_ios'] = admobNativeIdIos;
+    data['admob_adaptive_banner_id'] = admobAdaptiveBannerId;
+    data['admob_adaptive_banner_id_ios'] = admobAdaptiveBannerIdIos;
     
-    data['facebook_banner_id'] = this.facebookBannerId;
-    data['facebook_interstitial_id'] = this.facebookInterstitialId;
-    data['facebook_banner_id_ios'] = this.facebookBannerIdIos;
-    data['facebook_interstitial_id_ios'] = this.facebookInterstitialIdIos;
-    data['facebook_native_id'] = this.facebookNativeId;
-    data['facebook_native_id_ios'] = this.facebookNativeIdIos;
+    data['facebook_banner_id'] = facebookBannerId;
+    data['facebook_interstitial_id'] = facebookInterstitialId;
+    data['facebook_banner_id_ios'] = facebookBannerIdIos;
+    data['facebook_interstitial_id_ios'] = facebookInterstitialIdIos;
+    data['facebook_native_id'] = facebookNativeId;
+    data['facebook_native_id_ios'] = facebookNativeIdIos;
     
-    data['interstitial_ads_interval'] = this.interstitialAdsInterval;
-    data['banner_ad_book_list'] = this.bannerAdBookList;
-    data['banner_ad_category_list'] = this.bannerAdCategoryList;
-    data['banner_ad_author_list'] = this.bannerAdAuthorList;
-    data['banner_ad_author_detail'] = this.bannerAdAuthorDetail;
-    data['banner_ad_book_detail'] = this.bannerAdBookDetail;
-    data['banner_ad_book_search'] = this.bannerAdBookSearch;
-    data['interstitial_ad_book_list'] = this.interstitialAdBookList;
-    data['interstitial_ad_category_list'] = this.interstitialAdCategoryList;
-    data['interstitial_ad_book_detail'] = this.interstitialAdBookDetail;
-    data['interstitial_ad_author_list'] = this.interstitialAdAuthorList;
-    data['interstitial_ad_author_detail'] = this.interstitialAdAuthorDetail;
+    data['interstitial_ads_interval'] = interstitialAdsInterval;
+    data['banner_ad_book_list'] = bannerAdBookList;
+    data['banner_ad_category_list'] = bannerAdCategoryList;
+    data['banner_ad_author_list'] = bannerAdAuthorList;
+    data['banner_ad_author_detail'] = bannerAdAuthorDetail;
+    data['banner_ad_book_detail'] = bannerAdBookDetail;
+    data['banner_ad_book_search'] = bannerAdBookSearch;
+    data['interstitial_ad_book_list'] = interstitialAdBookList;
+    data['interstitial_ad_category_list'] = interstitialAdCategoryList;
+    data['interstitial_ad_book_detail'] = interstitialAdBookDetail;
+    data['interstitial_ad_author_list'] = interstitialAdAuthorList;
+    data['interstitial_ad_author_detail'] = interstitialAdAuthorDetail;
     return data;
   }
 }
@@ -298,9 +310,9 @@ class OnesignalConfiguration {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['app_id'] = this.appId;
-    data['rest_api_key'] = this.restApiKey;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['app_id'] = appId;
+    data['rest_api_key'] = restApiKey;
     return data;
   }
 }
@@ -334,14 +346,14 @@ class Apiconfiguration {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['limit'] = this.limit;
-    data['category_order'] = this.categoryOrder;
-    data['category_orderby'] = this.categoryOrderby;
-    data['book_order'] = this.bookOrder;
-    data['book_orderby'] = this.bookOrderby;
-    data['author_order'] = this.authorOrder;
-    data['author_orderby'] = this.authorOrderby;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['limit'] = limit;
+    data['category_order'] = categoryOrder;
+    data['category_orderby'] = categoryOrderby;
+    data['book_order'] = bookOrder;
+    data['book_orderby'] = bookOrderby;
+    data['author_order'] = authorOrder;
+    data['author_orderby'] = authorOrderby;
     return data;
   }
 }
@@ -367,13 +379,13 @@ class AppSlider {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['title'] = this.title;
-    data['url'] = this.url;
-    data['image'] = this.image;
-    data['status'] = this.status;
-    data['image_url'] = this.imageUrl;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['title'] = title;
+    data['url'] = url;
+    data['image'] = image;
+    data['status'] = status;
+    data['image_url'] = imageUrl;
     return data;
   }
 }
@@ -393,18 +405,18 @@ class Category {
     if (json['book'] != null) {
       book = <Book>[];
       json['book'].forEach((v) {
-        book!.add(new Book.fromJson(v));
+        book!.add(Book.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['logo'] = this.logo;
-    if (this.book != null) {
-      data['book'] = this.book!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['logo'] = logo;
+    if (book != null) {
+      data['book'] = book!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -457,20 +469,20 @@ class Author {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['description'] = this.description;
-    data['designation'] = this.designation;
-    data['image'] = this.image;
-    data['youtube_url'] = this.youtubeUrl;
-    data['facebook_url'] = this.facebookUrl;
-    data['instagram_url'] = this.instagramUrl;
-    data['twitter_url'] = this.twitterUrl;
-    data['website_url'] = this.websiteUrl;
-    data['status'] = this.status;
-    data['created_at'] = this.createdAt;
-    data['image_url'] = this.imageUrl;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['description'] = description;
+    data['designation'] = designation;
+    data['image'] = image;
+    data['youtube_url'] = youtubeUrl;
+    data['facebook_url'] = facebookUrl;
+    data['instagram_url'] = instagramUrl;
+    data['twitter_url'] = twitterUrl;
+    data['website_url'] = websiteUrl;
+    data['status'] = status;
+    data['created_at'] = createdAt;
+    data['image_url'] = imageUrl;
     return data;
   }
 }
@@ -492,6 +504,9 @@ class Book {
   String? authorName;
   String? authorImage;
   String? isPremium;
+  int? coinPrice;
+  bool? isUnlocked;
+  String? unlockExpiresAt;
 
   Book(
       {this.id,
@@ -509,7 +524,10 @@ class Book {
         this.categoryName,
         this.authorName,
         this.authorImage,
-        this.isPremium});
+        this.isPremium,
+        this.coinPrice,
+        this.isUnlocked,
+        this.unlockExpiresAt});
 
   Book.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -528,26 +546,32 @@ class Book {
     authorName = json['author_name'];
     authorImage = json['author_image'];
     isPremium = json['is_premium']?.toString();
+    coinPrice = json['coin_price'] is String ? int.tryParse(json['coin_price']) : json['coin_price'];
+    isUnlocked = json['is_unlocked'];
+    unlockExpiresAt = json['unlock_expires_at'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['category_id'] = this.categoryId;
-    data['author_id'] = this.authorId;
-    data['type'] = this.type;
-    data['file'] = this.file;
-    data['logo'] = this.logo;
-    data['description'] = this.description;
-    data['url'] = this.url;
-    data['is_popular'] = this.isPopular;
-    data['is_featured'] = this.isFeatured;
-    data['created_at'] = this.createdAt;
-    data['category_name'] = this.categoryName;
-    data['author_name'] = this.authorName;
-    data['author_image'] = this.authorImage;
-    data['is_premium'] = this.isPremium;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['category_id'] = categoryId;
+    data['author_id'] = authorId;
+    data['type'] = type;
+    data['file'] = file;
+    data['logo'] = logo;
+    data['description'] = description;
+    data['url'] = url;
+    data['is_popular'] = isPopular;
+    data['is_featured'] = isFeatured;
+    data['created_at'] = createdAt;
+    data['category_name'] = categoryName;
+    data['author_name'] = authorName;
+    data['author_image'] = authorImage;
+    data['is_premium'] = isPremium;
+    data['coin_price'] = coinPrice;
+    data['is_unlocked'] = isUnlocked;
+    data['unlock_expires_at'] = unlockExpiresAt;
     return data;
   }
 }

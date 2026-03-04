@@ -11,6 +11,8 @@ import '../utils/Extensions/shared_pref.dart';
 import '../utils/Extensions/string_extensions.dart';
 
 class NativeAdWidget extends StatefulWidget {
+  const NativeAdWidget({super.key});
+
   @override
   _NativeAdWidgetState createState() => _NativeAdWidgetState();
 }
@@ -36,7 +38,7 @@ class _NativeAdWidgetState extends State<NativeAdWidget> {
     }
 
     if (adId.validate().isNotEmpty) {
-      return adId!;
+      return adId;
     }
 
     return kReleaseMode

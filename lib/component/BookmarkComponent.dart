@@ -16,7 +16,7 @@ class BookmarkComponent extends StatefulWidget {
   final Book data;
   final bool isSlider;
 
-  BookmarkComponent(this.data, {this.onTap, this.isSlider = false});
+  const BookmarkComponent(this.data, {super.key, this.onTap, this.isSlider = false});
 
   @override
   BookmarkComponentState createState() => BookmarkComponentState();
@@ -29,7 +29,7 @@ class BookmarkComponentState extends State<BookmarkComponent> {
     init();
   }
 
-  init() async {
+  Future<void> init() async {
     //
   }
 

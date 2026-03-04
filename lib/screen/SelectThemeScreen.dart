@@ -12,6 +12,8 @@ import '../utils/colors.dart';
 import '../utils/constant.dart';
 
 class SelectThemeScreen extends StatefulWidget {
+  const SelectThemeScreen({super.key});
+
   @override
   _SelectThemeScreenState createState() => _SelectThemeScreenState();
 }
@@ -71,7 +73,7 @@ class _SelectThemeScreenState extends State<SelectThemeScreen> {
                 padding: EdgeInsets.all(16),
                 child: Row(
                   children: [
-                    Text('${getName(ThemeModes.values[index])}', style: boldTextStyle(color: currentIndex == index ? Colors.white : textPrimaryColorGlobal)).expand(),
+                    Text(getName(ThemeModes.values[index]), style: boldTextStyle(color: currentIndex == index ? Colors.white : textPrimaryColorGlobal)).expand(),
                     getIcons(context, ThemeModes.values[index], index),
                   ],
                 ),

@@ -15,7 +15,7 @@ class CategoryScreen extends StatefulWidget {
   static String tag = '/CategoryScreen';
   final bool isCategory;
 
-  CategoryScreen({this.isCategory = false});
+  const CategoryScreen({super.key, this.isCategory = false});
 
   @override
   CategoryScreenState createState() => CategoryScreenState();
@@ -28,7 +28,7 @@ class CategoryScreenState extends State<CategoryScreen> {
     init();
   }
 
-  init() async {
+  Future<void> init() async {
     //
   }
 

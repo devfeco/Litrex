@@ -22,6 +22,8 @@ import 'DashboardScreen.dart';
 class SplashScreen extends StatefulWidget {
   static String tag = '/SplashScreen';
 
+  const SplashScreen({super.key});
+
   @override
   SplashScreenState createState() => SplashScreenState();
 }
@@ -33,7 +35,7 @@ class SplashScreenState extends State<SplashScreen> {
     init();
   }
 
-  init() async {
+  Future<void> init() async {
     await 2.seconds.delay;
     
     // Auth durumunu yükle

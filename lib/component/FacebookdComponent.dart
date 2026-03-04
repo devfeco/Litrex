@@ -33,10 +33,11 @@ void loadFacebookInterstitialAd() {
 
 // Show InterstitialAd
 void showFacebookInterstitialAd() {
-  if (_isInterstitialAdLoaded == true)
+  if (_isInterstitialAdLoaded == true) {
     FacebookInterstitialAd.showInterstitialAd();
-  else
+  } else {
     print("Interstitial Ad not yet loaded!");
+  }
 }
 
 Widget loadFacebookBannerId() {

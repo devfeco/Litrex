@@ -34,11 +34,14 @@ import 'PremiumScreen.dart';
 import 'DownloadScreen.dart';
 import '../component/NativeAdWidget.dart';
 import '../utils/OfflineReadingService.dart';
+import '../component/CoinBalanceComponent.dart';
 
 import 'dart:io';
 
 class HomeScreen extends StatefulWidget {
   static String tag = '/HomeScreen';
+
+  const HomeScreen({super.key});
 
   @override
   HomeScreenState createState() => HomeScreenState();
@@ -83,7 +86,7 @@ class HomeScreenState extends State<HomeScreen> {
     }
 
     if (adId.validate().isNotEmpty) {
-      return adId!;
+      return adId;
     }
     
     // Default / Fallback ID
@@ -125,12 +128,12 @@ class HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  init() async {
+  Future<void> init() async {
     List<String>? mIdList = getStringListAsync(chooseTopicList);
 
-    mIdList!.forEach((element) {
+    for (var element in mIdList!) {
       mCategoryId.add(element);
-    });
+    }
 
     getFilterBooks(list: mCategoryId).then((res) {
       mSuggestedList = res;
@@ -215,6 +218,7 @@ class HomeScreenState extends State<HomeScreen> {
         title: Text(AppName,
             style: boldTextStyle(size: 20, color: Colors.white)),
         actions: [
+          CoinBalanceComponent(),
           if (!authStore.isPremiumUser)
           Container(
             margin: EdgeInsets.all(8),

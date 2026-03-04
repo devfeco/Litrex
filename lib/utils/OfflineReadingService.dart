@@ -96,6 +96,7 @@ class OfflineReadingService {
         bookImage: bookData.logo.validate(),
         isPremium: bookData.isPremium,
         fileType: bookData.type,
+        unlockExpiry: bookData.unlockExpiresAt,
       ));
 
       final prefs = await SharedPreferences.getInstance();
@@ -108,7 +109,7 @@ class OfflineReadingService {
   }
 
   // Decrypt Book for Reading
-  Future<Uint8List?> getDecryptedBook(String bookId) async {
+  Future<Uint8List?> getDecryptedBook(String bookId, {bool isPremiumUser = false}) async {
     try {
       final books = await getDownloadedBooks();
       final book = books.firstWhere((b) => b.id == bookId, orElse: () => OfflineBook(id: '', filePath: '', downloadDate: ''));
@@ -117,6 +118,21 @@ class OfflineReadingService {
 
       final file = File(book.filePath);
       if (!await file.exists()) return null;
+
+      // 24 saatlik erişim kontrolü
+      if (!isPremiumUser && book.isPremium == '1') {
+        if (book.unlockExpiry != null) {
+          final expiry = DateTime.parse(book.unlockExpiry!);
+          if (DateTime.now().isAfter(expiry)) {
+            print("Access expired for book: $bookId");
+            return null;
+          }
+        } else {
+           // Eğer Premium kitabın expiry bilgisi yoksa ve kullanıcı premium değilse (ve jetonla açmamışsa)
+           print("No access for premium book: $bookId");
+           return null;
+        }
+      }
 
       final fileBytes = await file.readAsBytes();
       

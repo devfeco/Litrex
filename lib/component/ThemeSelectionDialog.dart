@@ -10,6 +10,8 @@ import '../utils/constant.dart';
 class ThemeSelectionDialog extends StatefulWidget {
   static String tag = '/ThemeSelectionDialog';
 
+  const ThemeSelectionDialog({super.key});
+
   @override
   ThemeSelectionDialogState createState() => ThemeSelectionDialogState();
 }
@@ -36,7 +38,7 @@ class ThemeSelectionDialogState extends State<ThemeSelectionDialog> {
   Widget build(BuildContext context) {
     List<String?> themeModeList = ["Light", "Dark", "System Default"];
     return Dialog(
-      child: Container(
+      child: SizedBox(
         width: MediaQuery.of(context).size.width,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
