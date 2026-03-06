@@ -20,8 +20,10 @@ import 'CategoryScreen.dart';
 import 'HomeScreen.dart';
 import 'auth/ProfileScreen.dart';
 import 'WebViewScreen.dart';
-import '../main.dart'; // Ensure main is imported for authStore
+import '../main.dart'; 
 import '../utils/Extensions/Commons.dart';
+import '../utils/constant.dart';
+import '../utils/Extensions/shared_pref.dart';
 
 
 class DashboardScreen extends StatefulWidget {
@@ -135,11 +137,11 @@ class DashboardScreenState extends State<DashboardScreen> {
       ),
       bottomSheet: Observer(
         builder: (_) {
-          if (authStore.isPremiumUser) return Offstage();
+          if (authStore.isPremiumUser || _currentIndex != 0) return Offstage();
           return Container(
             color: Color(0xFF9155FD),
             width: context.width(),
-            height: 50,
+            height: 36,
             child: InkWell(
               onTap: () {
                 showRewardedAd(onUserEarnedReward: () {
@@ -162,7 +164,7 @@ class DashboardScreenState extends State<DashboardScreen> {
                   children: [
                     Icon(Icons.play_circle_fill, color: Colors.white, size: 24),
                     12.width,
-                    Text("Video izle ve 1 Jeton kazan", style: boldTextStyle(color: Colors.white, size: 14)),
+                    Text("Video izle ve ${getIntAsync(AD_REWARD_COINS, defaultValue: 1)} Jeton kazan", style: boldTextStyle(color: Colors.white, size: 14)),
                   ],
                 ),
               ),

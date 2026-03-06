@@ -28,6 +28,7 @@ Future<DashboardResponse> getDashboard() async {
       await setValue(TWITTER, res.appconfiguration!.twitter.validate());
       await setValue(INSTAGRAM, res.appconfiguration!.instagram.validate());
       await setValue(COPYRIGHT, res.appconfiguration!.copyright.validate());
+      await setValue(AD_REWARD_COINS, res.appconfiguration!.adRewardCoins ?? 10);
     }
 
     if (res.adsconfiguration != null) {
@@ -46,9 +47,13 @@ Future<DashboardResponse> getDashboard() async {
       await setValue(ADMOB_NATIVE_ID_IOS, res.adsconfiguration!.admobNativeIdIos.validate());
       await setValue(ADMOB_ADAPTIVE_BANNER_ID, res.adsconfiguration!.admobAdaptiveBannerId.validate());
       await setValue(ADMOB_ADAPTIVE_BANNER_ID_IOS, res.adsconfiguration!.admobAdaptiveBannerIdIos.validate());
+      await setValue(ADMOB_REWARDED_ID, res.adsconfiguration!.admobRewardedId.validate());
+      await setValue(ADMOB_REWARDED_ID_IOS, res.adsconfiguration!.admobRewardedIdIos.validate());
       
       await setValue(FACEBOOK_NATIVE_ID, res.adsconfiguration!.facebookNativeId.validate());
       await setValue(FACEBOOK_NATIVE_ID_IOS, res.adsconfiguration!.facebookNativeIdIos.validate());
+      await setValue(FACEBOOK_REWARDED_ID, res.adsconfiguration!.facebookRewardedId.validate());
+      await setValue(FACEBOOK_REWARDED_ID_IOS, res.adsconfiguration!.facebookRewardedIdIos.validate());
 
       if (res.adsconfiguration!.interstitialAdsInterval.validate().isEmptyOrNull) {
         await setValue(INTERSTITIAL_ADS_INTERVAL, "1");
@@ -200,13 +205,21 @@ Future<Map<String, dynamic>> unlockBookWithCoins(String bookId) async {
   return await handleResponse(response);
 }
 
-/// Admin tarafından eklenen jeton paketlerini getir (SKU, coin miktarı vb.)
-Future<List<CoinPackage>> getCoinPackages() async {
+/// Kitaba erişim yetkisi var mı anlık olarak kontrol et
+Future<Map<String, dynamic>> checkBookAccess(String bookId, String userId) async {
   final response = await buildHttpResponse(
-    'coins/packages.php',
-    method: HttpMethod.GET,
+    'books/check-access.php',
+    method: HttpMethod.POST,
+    request: {
+      'book_id': bookId,
+      'user_id': userId,
+    },
   );
-  final data = await handleResponse(response);
+  return await handleResponse(response);
+}
+
+/// API yanıtından jeton paket listesini parse eder (test edilebilir saf fonksiyon).
+List<CoinPackage> parseCoinPackagesResponse(dynamic data) {
   if (data is List) {
     return data.map((e) => CoinPackage.fromJson(Map<String, dynamic>.from(e))).toList();
   }
@@ -215,6 +228,16 @@ Future<List<CoinPackage>> getCoinPackages() async {
     return list.map((e) => CoinPackage.fromJson(Map<String, dynamic>.from(e))).toList();
   }
   return [];
+}
+
+/// Admin tarafından eklenen jeton paketlerini getir (SKU, coin miktarı vb.)
+Future<List<CoinPackage>> getCoinPackages() async {
+  final response = await buildHttpResponse(
+    'coins/packages.php',
+    method: HttpMethod.GET,
+  );
+  final data = await handleResponse(response);
+  return parseCoinPackagesResponse(data);
 }
 
 /// Jeton satın alımını backend'de doğrula; Google'dan gelen token ile coin eklenir.

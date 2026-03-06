@@ -23,6 +23,7 @@ import '../component/NativeAdWidget.dart';
 import '../network/RestApis.dart';
 import 'CoinPurchaseScreen.dart';
 import 'PremiumScreen.dart';
+import '../network/AuthApis.dart';
 
 class BookDetailScreen extends StatefulWidget {
   static String tag = '/BookDetailScreen';
@@ -675,6 +676,41 @@ class BookDetailScreenState extends State<BookDetailScreen> {
             // READ BUTTON
             GestureDetector(
               onTap: () async {
+                // Anlık kullanıcı güncellemesi (coin ve premium durumu)
+                if (authStore.isLoggedIn) {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (c) => Center(
+                      child: Container(
+                        padding: EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: appStore.isDarkModeOn ? Color(0xFF1A1A2E) : Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: CircularProgressIndicator(color: primaryColor),
+                      ),
+                    ),
+                  );
+                  
+                  try {
+                    final updatedUser = await getProfile();
+                    await authStore.setUser(updatedUser);
+                    if (authStore.currentUser?.id != null) {
+                      final accessRes = await checkBookAccess(widget.data.id.toString(), authStore.currentUser!.id.toString());
+                      if (accessRes['success'] == true) {
+                        var unlocked = accessRes['is_unlocked'];
+                        widget.data.isUnlocked = (unlocked == 1 || unlocked == '1' || unlocked == true || unlocked == 'true');
+                        widget.data.unlockExpiresAt = accessRes['expires_at'];
+                      }
+                    }
+                  } catch (e) {
+                    print(e);
+                  } finally {
+                    Navigator.pop(context); // Yükleme popup'ını kapat
+                  }
+                }
+
                 // Premium kitap ve erişim yoksa modal aç
                 if (widget.data.isPremium == '1' && !_hasAccess) {
                   _showPremiumAccessModal();

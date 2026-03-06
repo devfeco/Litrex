@@ -10,13 +10,16 @@ import '../utils/Extensions/int_extensions.dart';
 
 /// Header'daki jeton bakiyesi. Tıklanınca jeton satın alma / yönetim ekranına gider.
 class CoinBalanceComponent extends StatelessWidget {
-  const CoinBalanceComponent({super.key});
+  const CoinBalanceComponent({super.key, this.onTapForTesting});
+
+  /// Sadece testlerde kullanılır; verilirse tıklanınca bu çağrılır, CoinPurchaseScreen açılmaz.
+  final VoidCallback? onTapForTesting;
 
   @override
   Widget build(BuildContext context) {
     return Observer(
       builder: (_) => InkWell(
-        onTap: () => CoinPurchaseScreen().launch(context),
+        onTap: onTapForTesting ?? () => CoinPurchaseScreen().launch(context),
         borderRadius: radius(20),
         child: Container(
           margin: EdgeInsets.symmetric(vertical: 8, horizontal: 8),

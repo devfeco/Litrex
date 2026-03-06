@@ -30,7 +30,7 @@ class UserModel {
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      id: json['id'] is String ? int.tryParse(json['id']) : json['id'],
+      id: json['id'] != null ? int.tryParse(json['id'].toString()) : null,
       name: json['name'],
       email: json['email'],
       phone: json['phone'],
@@ -38,9 +38,9 @@ class UserModel {
       bio: json['bio'],
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
-      isPremium: json['is_premium'] is String ? int.tryParse(json['is_premium']) : json['is_premium'],
+      isPremium: (json['is_premium'] == 1 || json['is_premium'] == '1' || json['is_premium'] == true || json['is_premium'] == 'true') ? 1 : 0,
       status: json['status']?.toString(),
-      coins: json['coins'] is String ? int.tryParse(json['coins']) : json['coins'],
+      coins: json['coins'] != null ? int.tryParse(json['coins'].toString()) ?? 0 : 0,
     );
   }
 

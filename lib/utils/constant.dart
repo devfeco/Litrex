@@ -44,6 +44,8 @@ const ADMOB_REWARDED_ID_IOS = 'admob_rewarded_id_ios';
 
 const FACEBOOK_NATIVE_ID = 'facebook_native_id';
 const FACEBOOK_NATIVE_ID_IOS = 'facebook_native_id_ios';
+const FACEBOOK_REWARDED_ID = 'facebook_rewarded_id';
+const FACEBOOK_REWARDED_ID_IOS = 'facebook_rewarded_id_ios';
 
 const INTERSTITIAL_ADS_INTERVAL = "interstitial_ads_interval";
 const BANNER_AD_BOOK_LIST = "banner_ad_book_list";
@@ -67,6 +69,7 @@ const WHATSAPP = 'whatsapp';
 const TWITTER = 'twitter';
 const INSTAGRAM = 'instagram';
 const COPYRIGHT = 'copyright';
+const AD_REWARD_COINS = 'ad_reward_coins';
 const WISHLIST_ITEM_LIST = 'WISHLIST_ITEM_LIST';
 const IS_NOTIFICATION_ON = "IS_NOTIFICATION_ON";
 
