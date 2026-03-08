@@ -508,7 +508,7 @@ class HomeScreenState extends State<HomeScreen> {
                     ),
 
                   // Banner üçün boşluq
-                  SizedBox(height: _isBannerAdLoaded ? _bannerHeight : 0),
+                  SizedBox(height: (_isBannerAdLoaded ? _bannerHeight : 0) + 36),
                 ],
               ),
             )
@@ -517,7 +517,7 @@ class HomeScreenState extends State<HomeScreen> {
             // --- Adaptive Banner (sabit alt hissədə) ---
             if (_isBannerAdLoaded && _bannerAd != null)
               Positioned(
-                bottom: 0,
+                bottom: 36,
                 left: 0,
                 right: 0,
                 child: Container(

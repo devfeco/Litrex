@@ -9,6 +9,14 @@ part of 'AuthStore.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$AuthStore on _AuthStore, Store {
+  Computed<bool>? _$isPremiumUserComputed;
+
+  @override
+  bool get isPremiumUser =>
+      (_$isPremiumUserComputed ??= Computed<bool>(() => super.isPremiumUser,
+              name: '_AuthStore.isPremiumUser'))
+          .value;
+
   late final _$isLoggedInAtom =
       Atom(name: '_AuthStore.isLoggedIn', context: context);
 
@@ -73,6 +81,21 @@ mixin _$AuthStore on _AuthStore, Store {
     });
   }
 
+  late final _$coinsAtom = Atom(name: '_AuthStore.coins', context: context);
+
+  @override
+  int get coins {
+    _$coinsAtom.reportRead();
+    return super.coins;
+  }
+
+  @override
+  set coins(int value) {
+    _$coinsAtom.reportWrite(value, super.coins, () {
+      super.coins = value;
+    });
+  }
+
   late final _$setLoggedInAsyncAction =
       AsyncAction('_AuthStore.setLoggedIn', context: context);
 
@@ -113,13 +136,21 @@ mixin _$AuthStore on _AuthStore, Store {
     return _$logoutAsyncAction.run(() => super.logout());
   }
 
+  late final _$forceLogoutAsyncAction =
+      AsyncAction('_AuthStore.forceLogout', context: context);
+
+  @override
+  Future<void> forceLogout() {
+    return _$forceLogoutAsyncAction.run(() => super.forceLogout());
+  }
+
   late final _$_AuthStoreActionController =
       ActionController(name: '_AuthStore', context: context);
 
   @override
   void setLoading(bool val) {
-    final _$actionInfo = _$_AuthStoreActionController.startAction(
-        name: '_AuthStore.setLoading');
+    final _$actionInfo =
+        _$_AuthStoreActionController.startAction(name: '_AuthStore.setLoading');
     try {
       return super.setLoading(val);
     } finally {
@@ -133,7 +164,9 @@ mixin _$AuthStore on _AuthStore, Store {
 isLoggedIn: ${isLoggedIn},
 isLoading: ${isLoading},
 currentUser: ${currentUser},
-authToken: ${authToken}
+authToken: ${authToken},
+coins: ${coins},
+isPremiumUser: ${isPremiumUser}
     ''';
   }
 }

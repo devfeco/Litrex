@@ -6,10 +6,11 @@ part of 'AppStore.dart';
 // StoreGenerator
 // **************************************************************************
 
-// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
+// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$AppStore on _AppStore, Store {
-  final _$isDarkModeOnAtom = Atom(name: '_AppStore.isDarkModeOn');
+  late final _$isDarkModeOnAtom =
+      Atom(name: '_AppStore.isDarkModeOn', context: context);
 
   @override
   bool get isDarkModeOn {
@@ -24,7 +25,8 @@ mixin _$AppStore on _AppStore, Store {
     });
   }
 
-  final _$isNotificationOnAtom = Atom(name: '_AppStore.isNotificationOn');
+  late final _$isNotificationOnAtom =
+      Atom(name: '_AppStore.isNotificationOn', context: context);
 
   @override
   bool get isNotificationOn {
@@ -39,7 +41,8 @@ mixin _$AppStore on _AppStore, Store {
     });
   }
 
-  final _$isLoadingAtom = Atom(name: '_AppStore.isLoading');
+  late final _$isLoadingAtom =
+      Atom(name: '_AppStore.isLoading', context: context);
 
   @override
   bool get isLoading {
@@ -54,7 +57,8 @@ mixin _$AppStore on _AppStore, Store {
     });
   }
 
-  final _$selectedLanguageAtom = Atom(name: '_AppStore.selectedLanguage');
+  late final _$selectedLanguageAtom =
+      Atom(name: '_AppStore.selectedLanguage', context: context);
 
   @override
   String get selectedLanguage {
@@ -69,14 +73,16 @@ mixin _$AppStore on _AppStore, Store {
     });
   }
 
-  final _$setDarkModeAsyncAction = AsyncAction('_AppStore.setDarkMode');
+  late final _$setDarkModeAsyncAction =
+      AsyncAction('_AppStore.setDarkMode', context: context);
 
   @override
   Future<void> setDarkMode(bool aIsDarkMode) {
     return _$setDarkModeAsyncAction.run(() => super.setDarkMode(aIsDarkMode));
   }
 
-  final _$setLanguageAsyncAction = AsyncAction('_AppStore.setLanguage');
+  late final _$setLanguageAsyncAction =
+      AsyncAction('_AppStore.setLanguage', context: context);
 
   @override
   Future<void> setLanguage(String aCode, {BuildContext? context}) {
@@ -84,7 +90,8 @@ mixin _$AppStore on _AppStore, Store {
         .run(() => super.setLanguage(aCode, context: context));
   }
 
-  final _$_AppStoreActionController = ActionController(name: '_AppStore');
+  late final _$_AppStoreActionController =
+      ActionController(name: '_AppStore', context: context);
 
   @override
   void setNotification(bool val) {

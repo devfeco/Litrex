@@ -150,7 +150,15 @@ class DashboardScreenState extends State<DashboardScreen> {
                       toast(value['message']);
                       // Update coins in store
                       if (value['new_balance'] != null) {
-                        authStore.coins = value['new_balance'];
+                        int newCoins = value['new_balance'] is int 
+                            ? value['new_balance'] as int
+                            : int.tryParse(value['new_balance'].toString()) ?? authStore.coins;
+                            
+                        authStore.coins = newCoins;
+                        setValue('COINS', newCoins);
+                        if (authStore.currentUser != null) {
+                          authStore.currentUser!.coins = newCoins;
+                        }
                       }
                     }
                   }).catchError((e) {

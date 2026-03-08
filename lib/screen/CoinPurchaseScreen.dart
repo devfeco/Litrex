@@ -11,7 +11,7 @@ import '../utils/Extensions/int_extensions.dart';
 import '../utils/Extensions/string_extensions.dart';
 import '../utils/Extensions/text_styles.dart';
 import '../utils/colors.dart';
-
+import '../utils/Extensions/shared_pref.dart';
 /// Jeton satın alma ekranı.
 /// Paketler admin panelden gelir (SKU, coin miktarı); fiyat Google Play'den çekilir.
 class CoinPurchaseScreen extends StatefulWidget {
@@ -159,9 +159,15 @@ class _CoinPurchaseScreenState extends State<CoinPurchaseScreen> {
           );
 
           if (res['success'] == true && res['new_balance'] != null) {
-            authStore.coins = res['new_balance'] is int
+            int newCoins = res['new_balance'] is int
                 ? res['new_balance'] as int
                 : int.tryParse(res['new_balance'].toString()) ?? authStore.coins;
+                
+            authStore.coins = newCoins;
+            setValue('COINS', newCoins);
+            if (authStore.currentUser != null) {
+              authStore.currentUser!.coins = newCoins;
+            }
             toast(res['message'] ?? 'Jetonlar hesabınıza eklendi.');
             if (details.pendingCompletePurchase) {
               await _inAppPurchase.completePurchase(details);

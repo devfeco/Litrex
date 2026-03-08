@@ -24,7 +24,7 @@ import '../network/RestApis.dart';
 import 'CoinPurchaseScreen.dart';
 import 'PremiumScreen.dart';
 import '../network/AuthApis.dart';
-
+import '../utils/Extensions/shared_pref.dart';
 class BookDetailScreen extends StatefulWidget {
   static String tag = '/BookDetailScreen';
   final Book data;
@@ -297,7 +297,16 @@ class BookDetailScreenState extends State<BookDetailScreen> {
                                         setState(() {
                                           widget.data.isUnlocked = true;
                                           widget.data.unlockExpiresAt = res['expires_at'];
-                                          authStore.coins = res['new_balance'];
+                                          
+                                          int newCoins = res['new_balance'] is int
+                                              ? res['new_balance'] as int
+                                              : int.tryParse(res['new_balance'].toString()) ?? authStore.coins;
+                                              
+                                          authStore.coins = newCoins;
+                                          setValue('COINS', newCoins);
+                                          if (authStore.currentUser != null) {
+                                            authStore.currentUser!.coins = newCoins;
+                                          }
                                         });
                                         Navigator.pop(ctx);
                                         toast(res['message'] ?? "Kitap başarıyla açıldı!");
